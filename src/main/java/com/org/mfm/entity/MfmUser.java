@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Entity
 public class MfmUser {
-	
+
 	@Id
 	@GeneratedValue
 	private int userId;
