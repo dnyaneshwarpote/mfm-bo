@@ -17,20 +17,5 @@ import io.swagger.v3.oas.annotations.servers.Server;
 @SecurityScheme(name = "bearerAuth", description = "JWT auth description", scheme = "bearer", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", in = SecuritySchemeIn.HEADER)
 public class AppOpenApiConfig {
 
-	/**
-	 * @Bean public OpenAPI springShopOpenAPI() { return new OpenAPI() .info(new
-	 *       Info().title("SpringShop API") .description("Spring shop sample
-	 *       application") .version("v0.0.1") .license(new License().name("Apache
-	 *       2.0").url("http://springdoc.org"))) .externalDocs(new
-	 *       ExternalDocumentation() .description("SpringShop Wiki Documentation")
-	 *       .url("https://springshop.wiki.github.org/docs")); }
-	 * @Bean public GroupedOpenApi publicApi() { return GroupedOpenApi.builder()
-	 *       .group("springshop-public") .pathsToMatch("/public/**") .build(); }
-	 * @Bean public GroupedOpenApi adminApi() { return GroupedOpenApi.builder()
-	 *       .group("springshop-admin") .pathsToMatch("/admin/**")
-	 *       .addOpenApiMethodFilter(method ->
-	 *       method.isAnnotationPresent(Admin.class)) .build(); }
-	 *
-	 */
 
 }
