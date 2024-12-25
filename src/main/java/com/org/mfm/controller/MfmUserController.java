@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.org.mfm.entity.MfmUser;
 import com.org.mfm.repository.MfmUserRepository;
 
-@RestController
+@RestController("/mfm-user")
 public class MfmUserController {
 
 
@@ -25,6 +25,11 @@ public class MfmUserController {
 	@GetMapping("/all-users")
 	public List<MfmUser> getAllUsers() {
 		return userRepo.findAll();
+	}
+	
+	@GetMapping("/greet")
+	public String greet() {
+		return "Greet!!!!!!!!!!!!!";
 	}
 	
 }
