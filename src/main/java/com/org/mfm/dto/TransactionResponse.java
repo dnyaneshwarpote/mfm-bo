@@ -5,11 +5,8 @@ import java.sql.Date;
 import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.enums.TransactionType;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
-public record TransactionResponse(String fundName, String institutionName, float quantity, float nav, int txnId,
-		Date txnDate, double txnAmount, InvestmentType invType,
-		@NotBlank(message = "Please provide valid Transction Type") TransactionType txnType, @NotNull int folioNumber) {
+public record TransactionResponse(int folioNumber, int txnId, Date txnDate, double txnAmount, InvestmentType invType,
+		TransactionType txnType, String fundName, String stockName, String institutionName, float quantity, float nav,
+		float rate, float brokerage) {
 
 }

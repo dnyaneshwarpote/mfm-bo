@@ -1,4 +1,4 @@
-/*
+
 package com.org.mfm.service.impl;
 
 import java.util.List;
@@ -40,46 +40,16 @@ public class StockTransactionServiceImpl implements StockTransactionService {
 	}
 
 	@Override
-	public StockTransaction saveTransaction(Transaction txnRequest) {
-		StockTransaction stockTxn = (StockTransaction) txnRequest;
-		PortFolio port = this.portfolioService.getPortFolio(txnRequest.getFolioNumber());
-		Optional<Investment> investment = port.getInvestments().stream()
-				.filter(inv -> InvestmentType.STOCK.equals(inv.getInvestmentType())
-						&& (((Stock) inv).getStockName().equals(stockTxn.getStockName())))
-				.findFirst();
-
-		if (investment.isPresent()) {
-			return this.investmentService.updateInvestment(stockTxn, investment.get());
-		} else {
-			return this.investmentService.addInvestment(stockTxn, port);
-		}
-
+	public List<Transaction> getTransactionsByFolioAndStockName(Integer folioNumber, String stockName) {
+		return null;
+		// return this.stockTxnRepo.findAllByFolioNumberAndStockName(folioNumber,
+		// stockName);
 	}
 
 	@Override
-	public List<Transaction> findAllTxnsByFolioNumber(Integer folioNumber) {
-		return this.txnRepo.findAllByFolioNumber(folioNumber);
-	}
-
-	@Override
-	public List<StockTransaction> getTransactionsByFolioAndStockName(Integer folioNumber, String stockName) {
-		return this.stockTxnRepo.findAllByFolioNumberAndStockName(folioNumber, stockName);
-	}
-
-	@Override
-	public Transaction findTransactionByTxnId(Integer txnId) {
-		return this.txnRepo.findById(txnId).orElseThrow(() -> new RuntimeException("Stock Transaction Not found"));
-
-	}
-
-	@Override
-	public void deleteTransaction(int txnId) {
-		StockTransaction txn = (StockTransaction) findTransactionByTxnId(txnId);
-		Stock stock = (Stock) txn.getInvestment();
-		stock.setHeldQuantity(stock.getHeldQuantity() - txn.getQuantity());
-		stockRepo.save(stock);
-		this.txnRepo.deleteById(txnId);
+	public Transaction saveTransaction(Transaction txnRequest) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
-*/

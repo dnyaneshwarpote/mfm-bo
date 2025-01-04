@@ -1,16 +1,16 @@
 package com.org.mfm.service;
 
-import com.org.mfm.dto.StockTxnRequest;
+import com.org.mfm.dto.TransactionRequest;
 import com.org.mfm.entity.Investment;
-import com.org.mfm.entity.StockTransaction;
+import com.org.mfm.entity.PPFTransaction;
 
 import jakarta.validation.Valid;
 
 public interface PPFService extends InvestmentService {
 
-	void updateStockInvestment(StockTransaction stockTxn, Investment investment);
+	void updatePPFInvestment(PPFTransaction ppfTxn, Investment investment);
 
 	@Override
-	StockTransaction mapToEntityTransaction(@Valid StockTxnRequest txnRequest);
+	PPFTransaction mapToEntityTransaction(@Valid TransactionRequest txnRequest);
 
 }

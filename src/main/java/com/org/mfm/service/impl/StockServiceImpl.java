@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.org.mfm.dao.PortfolioRepository;
 import com.org.mfm.dao.StockRepository;
-import com.org.mfm.dto.StockTxnRequest;
+import com.org.mfm.dto.TransactionRequest;
 import com.org.mfm.entity.Investment;
 import com.org.mfm.entity.PortFolio;
 import com.org.mfm.entity.Stock;
@@ -61,7 +61,8 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public StockTransaction mapToEntityTransaction(@Valid StockTxnRequest stockTxnRequest) {
+	public Transaction mapToEntityTransaction(@Valid TransactionRequest stockTxnRequest) {
+		
 		StockTransaction stockTxn = new StockTransaction();
 		stockTxn.setFolioNumber(stockTxnRequest.folioNumber());
 		stockTxn.setBrokerage(stockTxnRequest.brokerage());
@@ -89,10 +90,10 @@ public class StockServiceImpl implements StockService {
 	public StockTransaction updateInvestment(Transaction txn, Investment investment) {
 		StockTransaction stockTxn = (StockTransaction) txn;
 		Stock stock = (Stock) investment;
-		int heldQuantity=stock.getHeldQuantity() + stockTxn.getQuantity();
-		double inValue=stock.getInvestmentValue() + stockTxn.getTxnAmount();
+		float heldQuantity = stock.getHeldQuantity() + stockTxn.getQuantity();
+		double inValue = stock.getInvestmentValue() + stockTxn.getTxnAmount();
 		stock.setHeldQuantity(heldQuantity);
-		stock.setAveragePrice(inValue/heldQuantity);
+		stock.setAveragePrice(inValue / heldQuantity);
 		stock.setInvestmentValue(inValue);
 		stock.getTransactions().add(stockTxn);
 		stockTxn.setInvestment(stock);
@@ -127,8 +128,9 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public void updateInvestmentTransaction(PortFolio port, StockTransaction txnRequest) {
+	public void updateInvestmentTransaction(PortFolio port, Transaction txn) {
 
+		StockTransaction txnRequest = (StockTransaction) txn;
 		List<Investment> investments = port.getInvestments().stream()
 				.filter(inv -> InvestmentType.STOCK.equals(inv.getInvestmentType())).toList();
 
@@ -145,7 +147,7 @@ public class StockServiceImpl implements StockService {
 		stockTxn.setTxnDate(txnRequest.getTxnDate());
 		stockTxn.setTxnType(txnRequest.getTxnType());
 
-		int newHeldQuantity = (stockInvestment.getHeldQuantity() + txnRequest.getQuantity())
+		float newHeldQuantity = (stockInvestment.getHeldQuantity() + txnRequest.getQuantity())
 				- stockInvestment.getHeldQuantity();
 		double investmentValue = (stockInvestment.getInvestmentValue() + txnRequest.getTxnAmount())
 				- stockInvestment.getInvestmentValue();

@@ -15,7 +15,7 @@ public class Stock extends Investment {
 	@Id
 	private int id;
 	private String stockName;
-	private int heldQuantity;
+	private float heldQuantity;
 	private double averagePrice;
 	private double realizedProfit;
 

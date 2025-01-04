@@ -2,6 +2,7 @@ package com.org.mfm.service;
 
 import java.util.List;
 
+import com.org.mfm.dto.TransactionRequest;
 import com.org.mfm.entity.Transaction;
 
 public interface TransactionService {
@@ -13,5 +14,7 @@ public interface TransactionService {
 	List<Transaction> findAllTxnsByFolioNumber(Integer folioNumber);
 
 	void deleteTransaction(int txnId);
+
+	Transaction getTypeObject(TransactionRequest txnRequest);
 
 }

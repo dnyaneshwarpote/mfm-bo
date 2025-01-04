@@ -14,7 +14,7 @@ import lombok.Setter;
 public class StockTransaction extends Transaction {
 
 	private String stockName;
-	private int quantity;
+	private float quantity;
 	private float rate;
 	private float brokerage;
 

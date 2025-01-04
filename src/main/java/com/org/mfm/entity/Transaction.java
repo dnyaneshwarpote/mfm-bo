@@ -2,6 +2,7 @@ package com.org.mfm.entity;
 
 import java.sql.Date;
 
+import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.enums.TransactionType;
 
 import jakarta.persistence.CascadeType;
@@ -33,5 +34,7 @@ public class Transaction {
 	@JoinColumn(name = "investment_id", nullable = false)
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Investment investment;
+
+	private InvestmentType investmentType;
 
 }

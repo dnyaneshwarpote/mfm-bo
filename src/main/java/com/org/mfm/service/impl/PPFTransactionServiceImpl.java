@@ -13,7 +13,6 @@ import com.org.mfm.entity.PPF;
 import com.org.mfm.entity.PPFTransaction;
 import com.org.mfm.entity.PortFolio;
 import com.org.mfm.entity.Stock;
-import com.org.mfm.entity.StockTransaction;
 import com.org.mfm.entity.Transaction;
 import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.service.InvestmentService;
@@ -32,6 +31,7 @@ public class PPFTransactionServiceImpl implements PPFTransactionService {
 
 	public PPFTransactionServiceImpl(PPFService ppfService, PortfolioService portfolioService,
 			PPFTransactionRepository stockTxnRepo, TransactionRepository txnRepo, PPFRepository ppfRepo) {
+		super();
 		this.investmentService = ppfService;
 		this.portfolioService = portfolioService;
 		this.ppfTxnRepo = stockTxnRepo;
@@ -41,45 +41,25 @@ public class PPFTransactionServiceImpl implements PPFTransactionService {
 	}
 
 	@Override
-	public StockTransaction saveTransaction(Transaction txnRequest) {
-		StockTransaction stockTxn = (StockTransaction) txnRequest;
-		PortFolio port = this.portfolioService.getPortFolio(txnRequest.getFolioNumber());
-		Optional<Investment> investment = port.getInvestments().stream()
-				.filter(inv -> InvestmentType.STOCK.equals(inv.getInvestmentType())
-						&& (((Stock) inv).getStockName().equals(stockTxn.getStockName())))
-				.findFirst();
-
-		if (investment.isPresent()) {
-			return this.investmentService.updateInvestment(stockTxn, investment.get());
-		} else {
-			return this.investmentService.addInvestment(stockTxn, port);
-		}
-
-	}
-
-	@Override
-	public List<Transaction> findAllTxnsByFolioNumber(Integer folioNumber) {
-		return this.txnRepo.findAllByFolioNumber(folioNumber);
-	}
-
-	@Override
 	public List<PPFTransaction> getTransactionsByFolioAndStockName(Integer folioNumber, String institutionName) {
 		return this.ppfTxnRepo.findAllByFolioNumberAndInstitutionName(folioNumber, institutionName);
 	}
 
 	@Override
-	public Transaction findTransactionByTxnId(Integer txnId) {
-		return this.txnRepo.findById(txnId).orElseThrow(() -> new RuntimeException("Stock Transaction Not found"));
+	public Transaction saveTransaction(Transaction txnRequest) {
+		PPFTransaction ppfTxn = (PPFTransaction) txnRequest;
+		PortFolio port = this.portfolioService.getPortFolio(txnRequest.getFolioNumber());
+		Optional<Investment> investment = port.getInvestments().stream()
+				.filter(inv -> InvestmentType.PPF.equals(inv.getInvestmentType())
+						&& (((PPF) inv).getInstitutionName().equals(ppfTxn.getInstitutionName())))
+				.findFirst();
 
-	}
-
-	@Override
-	public void deleteTransaction(int txnId) {
-		StockTransaction txn = (StockTransaction) findTransactionByTxnId(txnId);
-		PPF ppf = (PPF) txn.getInvestment();
-		ppf.setHeldQuantity(ppf.getHeldQuantity() - txn.getQuantity());
-		ppfRepo.save(ppf);
-		this.txnRepo.deleteById(txnId);
+		if (investment.isPresent()) {
+			return this.investmentService.updateInvestment(ppfTxn, investment.get());
+		} else {
+			return this.investmentService.addInvestment(ppfTxn, port);
+		}
+		//return ppfTxnRepo.save(ppfTxn);
 	}
 
 }

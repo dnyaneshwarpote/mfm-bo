@@ -2,17 +2,19 @@ package com.org.mfm.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
 @Entity
+@NoArgsConstructor
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class PPF extends Investment {
 
 	@Id
 	private int id;
-	private String fundName;
+	private String institutionName;
 	private float quantity;
 	private float nav;
 	private float heldQuantity;

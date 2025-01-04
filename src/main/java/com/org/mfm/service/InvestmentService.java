@@ -2,10 +2,9 @@ package com.org.mfm.service;
 
 import java.util.List;
 
-import com.org.mfm.dto.StockTxnRequest;
+import com.org.mfm.dto.TransactionRequest;
 import com.org.mfm.entity.Investment;
 import com.org.mfm.entity.PortFolio;
-import com.org.mfm.entity.StockTransaction;
 import com.org.mfm.entity.Transaction;
 import com.org.mfm.enums.InvestmentType;
 
@@ -17,12 +16,12 @@ public interface InvestmentService {
 
 	List<?> getInvestments(InvestmentType stock, Integer folioNumber);
 
-	StockTransaction updateInvestment(Transaction stockTxn, Investment investment);
+	Transaction updateInvestment(Transaction stockTxn, Investment investment);
 
-	StockTransaction addInvestment(Transaction stockTxn, PortFolio port);
+	Transaction addInvestment(Transaction stockTxn, PortFolio port);
 
-	void updateInvestmentTransaction(PortFolio port, StockTransaction stockTxn);
+	void updateInvestmentTransaction(PortFolio port, Transaction txn);
 
-	StockTransaction mapToEntityTransaction(@Valid StockTxnRequest txnRequest);
+	Transaction mapToEntityTransaction(@Valid TransactionRequest txnRequest);
 
 }

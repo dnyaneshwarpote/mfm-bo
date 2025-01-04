@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.org.mfm.dao.PPFRepository;
 import com.org.mfm.dao.PortfolioRepository;
-import com.org.mfm.dao.StockRepository;
-import com.org.mfm.dto.StockTxnRequest;
+import com.org.mfm.dto.TransactionRequest;
 import com.org.mfm.entity.Investment;
+import com.org.mfm.entity.PPF;
+import com.org.mfm.entity.PPFTransaction;
 import com.org.mfm.entity.PortFolio;
-import com.org.mfm.entity.Stock;
-import com.org.mfm.entity.StockTransaction;
 import com.org.mfm.entity.Transaction;
 import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.service.PPFService;
@@ -22,34 +22,31 @@ import jakarta.validation.Valid;
 @Service
 public class PPFServiceImpl implements PPFService {
 
-	private StockRepository stockRepository;
+	private PPFRepository ppfRepository;
 
 	private PortfolioRepository portRepository;
 
-	public PPFServiceImpl(StockRepository stockRepository, PortfolioRepository portRepository) {
-		this.stockRepository = stockRepository;
+	public PPFServiceImpl(PPFRepository stockRepository, PortfolioRepository portRepository) {
+		this.ppfRepository = stockRepository;
 		this.portRepository = portRepository;
 	}
 
 	@Override
-	public void updateStockInvestment(StockTransaction stockTxn, Investment investment) {
-		Stock stockInvestment = (Stock) investment;
-		stockInvestment.setHeldQuantity(stockInvestment.getHeldQuantity() + stockTxn.getQuantity());
-		stockInvestment.setInvestmentValue(stockInvestment.getInvestmentValue() + stockTxn.getTxnAmount());
-		stockInvestment.getTransactions().add(stockTxn);
-		stockTxn.setInvestment(stockInvestment);
-		stockRepository.save(stockInvestment);
+	public void updatePPFInvestment(PPFTransaction stockTxn, Investment investment) {
+		PPF ppfInvestment = (PPF) investment;
+		ppfInvestment.setInvestmentValue(ppfInvestment.getInvestmentValue() + stockTxn.getTxnAmount());
+		ppfInvestment.getTransactions().add(stockTxn);
+		stockTxn.setInvestment(ppfInvestment);
+		ppfRepository.save(ppfInvestment);
 	}
 
-	public void addStockInvestment(StockTransaction stockTxn, PortFolio port) {
-		Stock stockInvestment = new Stock();
+	public void addPPFInvestment(PPFTransaction stockTxn, PortFolio port) {
+		PPF stockInvestment = new PPF();
 		double txnAmount = stockTxn.getTxnAmount();
-		stockInvestment.setHeldQuantity(stockTxn.getQuantity());
 		stockInvestment.setInvestmentValue(txnAmount);
 		stockInvestment.setCurrentValue(txnAmount);
 		stockInvestment.setInvestmentType(InvestmentType.STOCK);
-		stockInvestment.setAveragePrice(txnAmount / stockTxn.getQuantity());
-		stockInvestment.setStockName(stockTxn.getStockName());
+		stockInvestment.setInstitutionName(stockTxn.getInstitutionName());
 		List<Transaction> transactions = List.of(stockTxn);
 		stockInvestment.setTransactions(transactions);
 		stockTxn.setInvestment(stockInvestment);
@@ -61,16 +58,13 @@ public class PPFServiceImpl implements PPFService {
 	}
 
 	@Override
-	public StockTransaction mapToEntityTransaction(@Valid StockTxnRequest stockTxnRequest) {
-		StockTransaction stockTxn = new StockTransaction();
-		stockTxn.setFolioNumber(stockTxnRequest.folioNumber());
-		stockTxn.setBrokerage(stockTxnRequest.brokerage());
-		stockTxn.setQuantity(stockTxnRequest.quantity());
-		stockTxn.setRate(stockTxnRequest.rate());
-		stockTxn.setStockName(stockTxnRequest.stockName());
-		stockTxn.setTxnAmount(stockTxnRequest.txnAmount());
-		stockTxn.setTxnDate(stockTxnRequest.txnDate());
-		stockTxn.setTxnType(stockTxnRequest.txnType());
+	public PPFTransaction mapToEntityTransaction(@Valid TransactionRequest txnRequest) {
+		PPFTransaction stockTxn = new PPFTransaction();
+		stockTxn.setFolioNumber(txnRequest.folioNumber());
+		stockTxn.setInstitutionName(txnRequest.institutionName());
+		stockTxn.setTxnAmount(txnRequest.txnAmount());
+		stockTxn.setTxnDate(txnRequest.txnDate());
+		stockTxn.setTxnType(txnRequest.txnType());
 		return stockTxn;
 	}
 
@@ -86,78 +80,67 @@ public class PPFServiceImpl implements PPFService {
 	}
 
 	@Override
-	public StockTransaction updateInvestment(Transaction txn, Investment investment) {
-		StockTransaction stockTxn = (StockTransaction) txn;
-		Stock stock = (Stock) investment;
-		int heldQuantity=stock.getHeldQuantity() + stockTxn.getQuantity();
-		double inValue=stock.getInvestmentValue() + stockTxn.getTxnAmount();
-		stock.setHeldQuantity(heldQuantity);
-		stock.setAveragePrice(inValue/heldQuantity);
+	public PPFTransaction updateInvestment(Transaction txn, Investment investment) {
+		PPFTransaction stockTxn = (PPFTransaction) txn;
+		PPF stock = (PPF) investment;
+		double inValue = stock.getInvestmentValue() + stockTxn.getTxnAmount();
 		stock.setInvestmentValue(inValue);
 		stock.getTransactions().add(stockTxn);
 		stockTxn.setInvestment(stock);
-		stockRepository.save(stock);
+		ppfRepository.save(stock);
 		return stockTxn;
 	}
 
 	@Override
-	public StockTransaction addInvestment(Transaction txn, PortFolio port) {
-		StockTransaction stockTxn = (StockTransaction) txn;
+	public PPFTransaction addInvestment(Transaction txn, PortFolio port) {
+		PPFTransaction stockTxn = (PPFTransaction) txn;
 		double txnAmount = stockTxn.getTxnAmount();
-		Stock stock = new Stock();
-		stock.setHeldQuantity(stockTxn.getQuantity());
-		stock.setInvestmentValue(txnAmount);
-		stock.setCurrentValue(txnAmount);
-		stock.setInvestmentType(InvestmentType.STOCK);
-		stock.setAveragePrice(txnAmount / stockTxn.getQuantity());
-		stock.setNetProfit(0);
-		stock.setRealizedProfit(0);
-		stock.setStockName(stockTxn.getStockName());
+		PPF ppf = new PPF();
+		ppf.setInvestmentValue(txnAmount);
+		ppf.setCurrentValue(txnAmount);
+		ppf.setInvestmentType(InvestmentType.STOCK);
+		ppf.setNetProfit(0);
+		ppf.setInstitutionName(stockTxn.getInstitutionName());
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(stockTxn);
-		stock.setTransactions(transactions);
-		stockTxn.setInvestment(stock);
+		ppf.setTransactions(transactions);
+		stockTxn.setInvestment(ppf);
 		List<Investment> invLst = new ArrayList<>();
-		invLst.add(stock);
+		invLst.add(ppf);
 		port.setInvestments(invLst);
-		stock.setPorfolio(port);
+		ppf.setPorfolio(port);
 		portRepository.save(port);
 		return stockTxn;
 
 	}
 
 	@Override
-	public void updateInvestmentTransaction(PortFolio port, StockTransaction txnRequest) {
+	public void updateInvestmentTransaction(PortFolio port, Transaction txnReq) {
+		PPFTransaction txnRequest = (PPFTransaction) txnReq;
 
 		List<Investment> investments = port.getInvestments().stream()
 				.filter(inv -> InvestmentType.STOCK.equals(inv.getInvestmentType())).toList();
 
-		Stock stockInvestment = (Stock) investments.stream()
-				.filter(inv -> ((Stock) inv).getStockName().equals(txnRequest.getStockName())).findFirst().get();
+		PPF stockInvestment = (PPF) investments.stream()
+				.filter(inv -> ((PPF) inv).getInstitutionName().equals(txnRequest.getInstitutionName())).findFirst()
+				.get();
 
-		StockTransaction stockTxn = (StockTransaction) stockInvestment.getTransactions().stream()
+		PPFTransaction stockTxn = (PPFTransaction) stockInvestment.getTransactions().stream()
 				.filter(inv -> inv.getTxnId() == txnRequest.getTxnId()).findFirst().get();
 
-		stockTxn.setBrokerage(txnRequest.getBrokerage());
-		stockTxn.setQuantity(txnRequest.getQuantity());
-		stockTxn.setRate(txnRequest.getRate());
 		stockTxn.setTxnAmount(txnRequest.getTxnAmount());
 		stockTxn.setTxnDate(txnRequest.getTxnDate());
 		stockTxn.setTxnType(txnRequest.getTxnType());
 
-		int newHeldQuantity = (stockInvestment.getHeldQuantity() + txnRequest.getQuantity())
-				- stockInvestment.getHeldQuantity();
 		double investmentValue = (stockInvestment.getInvestmentValue() + txnRequest.getTxnAmount())
 				- stockInvestment.getInvestmentValue();
 		double currentValue = (stockInvestment.getCurrentValue() + txnRequest.getTxnAmount())
 				- stockInvestment.getCurrentValue();
 
-		stockInvestment.setHeldQuantity(newHeldQuantity);
 		stockInvestment.setInvestmentValue(investmentValue);
 		stockInvestment.setCurrentValue(currentValue);
-		stockInvestment.setAveragePrice(investmentValue / newHeldQuantity);
 
-		stockRepository.save(stockInvestment);
+		ppfRepository.save(stockInvestment);
 
 	}
 
