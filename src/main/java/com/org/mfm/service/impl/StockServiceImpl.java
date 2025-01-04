@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.org.mfm.dao.PortfolioRepository;
 import com.org.mfm.dao.StockRepository;
-import com.org.mfm.dto.TransactionRequest;
 import com.org.mfm.entity.Investment;
 import com.org.mfm.entity.PortFolio;
 import com.org.mfm.entity.Stock;
@@ -16,8 +15,6 @@ import com.org.mfm.entity.StockTransaction;
 import com.org.mfm.entity.Transaction;
 import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.service.StockService;
-
-import jakarta.validation.Valid;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -29,76 +26,6 @@ public class StockServiceImpl implements StockService {
 	public StockServiceImpl(StockRepository stockRepository, PortfolioRepository portRepository) {
 		this.stockRepository = stockRepository;
 		this.portRepository = portRepository;
-	}
-
-	@Override
-	public void updateStockInvestment(StockTransaction stockTxn, Investment investment) {
-		Stock stockInvestment = (Stock) investment;
-		stockInvestment.setHeldQuantity(stockInvestment.getHeldQuantity() + stockTxn.getQuantity());
-		stockInvestment.setInvestmentValue(stockInvestment.getInvestmentValue() + stockTxn.getTxnAmount());
-		stockInvestment.getTransactions().add(stockTxn);
-		stockTxn.setInvestment(stockInvestment);
-		stockRepository.save(stockInvestment);
-	}
-
-	public void addStockInvestment(StockTransaction stockTxn, PortFolio port) {
-		Stock stockInvestment = new Stock();
-		double txnAmount = stockTxn.getTxnAmount();
-		stockInvestment.setHeldQuantity(stockTxn.getQuantity());
-		stockInvestment.setInvestmentValue(txnAmount);
-		stockInvestment.setCurrentValue(txnAmount);
-		stockInvestment.setInvestmentType(InvestmentType.STOCK);
-		stockInvestment.setAveragePrice(txnAmount / stockTxn.getQuantity());
-		stockInvestment.setStockName(stockTxn.getStockName());
-		List<Transaction> transactions = List.of(stockTxn);
-		stockInvestment.setTransactions(transactions);
-		stockTxn.setInvestment(stockInvestment);
-		List<Investment> invLst = new ArrayList<>();
-		invLst.add(stockInvestment);
-		port.setInvestments(invLst);
-		stockInvestment.setPorfolio(port);
-		portRepository.save(port);
-	}
-
-	@Override
-	public Transaction mapToEntityTransaction(@Valid TransactionRequest stockTxnRequest) {
-		
-		StockTransaction stockTxn = new StockTransaction();
-		stockTxn.setFolioNumber(stockTxnRequest.folioNumber());
-		stockTxn.setBrokerage(stockTxnRequest.brokerage());
-		stockTxn.setQuantity(stockTxnRequest.quantity());
-		stockTxn.setRate(stockTxnRequest.rate());
-		stockTxn.setStockName(stockTxnRequest.stockName());
-		stockTxn.setTxnAmount(stockTxnRequest.txnAmount());
-		stockTxn.setTxnDate(stockTxnRequest.txnDate());
-		stockTxn.setTxnType(stockTxnRequest.txnType());
-		return stockTxn;
-	}
-
-	@Override
-	public List<?> findAllByFolioNumber(int folioNumber) {
-		PortFolio port = portRepository.findById(folioNumber).orElse(new PortFolio());
-		return port.getInvestments();
-	}
-
-	@Override
-	public List<?> getInvestments(InvestmentType stock, Integer folioNumber) {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public StockTransaction updateInvestment(Transaction txn, Investment investment) {
-		StockTransaction stockTxn = (StockTransaction) txn;
-		Stock stock = (Stock) investment;
-		float heldQuantity = stock.getHeldQuantity() + stockTxn.getQuantity();
-		double inValue = stock.getInvestmentValue() + stockTxn.getTxnAmount();
-		stock.setHeldQuantity(heldQuantity);
-		stock.setAveragePrice(inValue / heldQuantity);
-		stock.setInvestmentValue(inValue);
-		stock.getTransactions().add(stockTxn);
-		stockTxn.setInvestment(stock);
-		stockRepository.save(stock);
-		return stockTxn;
 	}
 
 	@Override
@@ -125,6 +52,51 @@ public class StockServiceImpl implements StockService {
 		portRepository.save(port);
 		return stockTxn;
 
+	}
+
+	public void addStockInvestment(StockTransaction stockTxn, PortFolio port) {
+		Stock stockInvestment = new Stock();
+		double txnAmount = stockTxn.getTxnAmount();
+		stockInvestment.setHeldQuantity(stockTxn.getQuantity());
+		stockInvestment.setInvestmentValue(txnAmount);
+		stockInvestment.setCurrentValue(txnAmount);
+		stockInvestment.setInvestmentType(InvestmentType.STOCK);
+		stockInvestment.setAveragePrice(txnAmount / stockTxn.getQuantity());
+		stockInvestment.setStockName(stockTxn.getStockName());
+		List<Transaction> transactions = List.of(stockTxn);
+		stockInvestment.setTransactions(transactions);
+		stockTxn.setInvestment(stockInvestment);
+		List<Investment> invLst = new ArrayList<>();
+		invLst.add(stockInvestment);
+		port.setInvestments(invLst);
+		stockInvestment.setPorfolio(port);
+		portRepository.save(port);
+	}
+
+	@Override
+	public List<?> findAllByFolioNumber(int folioNumber) {
+		PortFolio port = portRepository.findById(folioNumber).orElse(new PortFolio());
+		return port.getInvestments();
+	}
+
+	@Override
+	public List<?> getInvestments(InvestmentType stock, Integer folioNumber) {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public StockTransaction updateInvestment(Transaction txn, Investment investment) {
+		StockTransaction stockTxn = (StockTransaction) txn;
+		Stock stock = (Stock) investment;
+		float heldQuantity = stock.getHeldQuantity() + stockTxn.getQuantity();
+		double inValue = stock.getInvestmentValue() + stockTxn.getTxnAmount();
+		stock.setHeldQuantity(heldQuantity);
+		stock.setAveragePrice(inValue / heldQuantity);
+		stock.setInvestmentValue(inValue);
+		stock.getTransactions().add(stockTxn);
+		stockTxn.setInvestment(stock);
+		stockRepository.save(stock);
+		return stockTxn;
 	}
 
 	@Override
@@ -161,6 +133,16 @@ public class StockServiceImpl implements StockService {
 
 		stockRepository.save(stockInvestment);
 
+	}
+
+	@Override
+	public void updateStockInvestment(StockTransaction stockTxn, Investment investment) {
+		Stock stockInvestment = (Stock) investment;
+		stockInvestment.setHeldQuantity(stockInvestment.getHeldQuantity() + stockTxn.getQuantity());
+		stockInvestment.setInvestmentValue(stockInvestment.getInvestmentValue() + stockTxn.getTxnAmount());
+		stockInvestment.getTransactions().add(stockTxn);
+		stockTxn.setInvestment(stockInvestment);
+		stockRepository.save(stockInvestment);
 	}
 
 }

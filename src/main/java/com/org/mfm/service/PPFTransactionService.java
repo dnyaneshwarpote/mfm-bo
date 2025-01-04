@@ -14,7 +14,5 @@ public interface PPFTransactionService {
 	List<PPFTransaction> getTransactionsByFolioAndStockName(Integer folioNumber, String stockName);
 
 	Transaction saveTransaction(Transaction txnRequest);
-	
-	
 
 }

@@ -32,12 +32,17 @@ public class UserController {
 	@Autowired
 	private AuthenticationService service;
 
-	@Operation(description = "New User Creation", summary = "Create new user", responses = {
+	@Operation(description = "User Activation", summary = "Activate the newly created User", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
-	@PostMapping("/create")
-	public ResponseEntity<AuthenticationResponse> register(@RequestBody UserRequest request) {
+	@PutMapping("/activate")
+	public ResponseEntity<AuthenticationResponse> activate(@RequestBody UserRequest request) {
 		return ResponseEntity.ok(service.register(request));
+	}
+
+	@PostMapping("/authenticate")
+	public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+		return ResponseEntity.ok(service.authenticate(request));
 	}
 
 	@Operation(description = "Get registered User", summary = "Get registered User", responses = {
@@ -56,22 +61,17 @@ public class UserController {
 		return ResponseEntity.ok(service.register(request));
 	}
 
-	@Operation(description = "User Activation", summary = "Activate the newly created User", responses = {
-			@ApiResponse(description = "Success", responseCode = "200"),
-			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
-	@PutMapping("/activate")
-	public ResponseEntity<AuthenticationResponse> activate(@RequestBody UserRequest request) {
-		return ResponseEntity.ok(service.register(request));
-	}
-
-	@PostMapping("/authenticate")
-	public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-		return ResponseEntity.ok(service.authenticate(request));
-	}
-
 	@PostMapping("/refresh-token")
 	public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		service.refreshToken(request, response);
+	}
+
+	@Operation(description = "New User Creation", summary = "Create new user", responses = {
+			@ApiResponse(description = "Success", responseCode = "200"),
+			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
+	@PostMapping("/create")
+	public ResponseEntity<AuthenticationResponse> register(@RequestBody UserRequest request) {
+		return ResponseEntity.ok(service.register(request));
 	}
 
 }

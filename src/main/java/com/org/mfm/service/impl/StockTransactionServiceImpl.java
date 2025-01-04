@@ -2,19 +2,13 @@
 package com.org.mfm.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.org.mfm.dao.StockRepository;
 import com.org.mfm.dao.StockTransactionRepository;
 import com.org.mfm.dao.TransactionRepository;
-import com.org.mfm.entity.Investment;
-import com.org.mfm.entity.PortFolio;
-import com.org.mfm.entity.Stock;
-import com.org.mfm.entity.StockTransaction;
 import com.org.mfm.entity.Transaction;
-import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.service.InvestmentService;
 import com.org.mfm.service.PortfolioService;
 import com.org.mfm.service.StockService;

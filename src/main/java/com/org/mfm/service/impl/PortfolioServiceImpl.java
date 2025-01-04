@@ -12,23 +12,18 @@ import com.org.mfm.service.PortfolioService;
 public class PortfolioServiceImpl implements PortfolioService {
 
 	private PortfolioRepository portfolioRepo;
-	//private UserService userService;
+	// private UserService userService;
 
-	public PortfolioServiceImpl(PortfolioRepository portfolioRepo//, UserService userService
-			) {
+	public PortfolioServiceImpl(PortfolioRepository portfolioRepo// , UserService userService
+	) {
 		this.portfolioRepo = portfolioRepo;
-		//this.userService = userService;
+		// this.userService = userService;
 
-	}
-
-	@Override
-	public PortFolio getPortFolio(int folioNumber) {
-		return this.portfolioRepo.findById(folioNumber).orElseThrow(() -> new RuntimeException("Portfolio not found"));
 	}
 
 	@Override
 	public PortFolio createPortfolio(PortfolioRequest folioRequest) {
-		//this.userService.getUserByUserName(folioRequest.userName());
+		// this.userService.getUserByUserName(folioRequest.userName());
 
 		Investor investor = new Investor();
 		investor.setUserName(folioRequest.userName());
@@ -45,6 +40,11 @@ public class PortfolioServiceImpl implements PortfolioService {
 		PortFolio folio = getPortFolio(folioNumber);
 		this.portfolioRepo.delete(folio);
 
+	}
+
+	@Override
+	public PortFolio getPortFolio(int folioNumber) {
+		return this.portfolioRepo.findById(folioNumber).orElseThrow(() -> new RuntimeException("Portfolio not found"));
 	}
 
 }

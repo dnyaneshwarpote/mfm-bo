@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.org.mfm.dao.PPFRepository;
 import com.org.mfm.dao.PortfolioRepository;
-import com.org.mfm.dto.TransactionRequest;
 import com.org.mfm.entity.Investment;
 import com.org.mfm.entity.PPF;
 import com.org.mfm.entity.PPFTransaction;
@@ -16,8 +15,6 @@ import com.org.mfm.entity.PortFolio;
 import com.org.mfm.entity.Transaction;
 import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.service.PPFService;
-
-import jakarta.validation.Valid;
 
 @Service
 public class PPFServiceImpl implements PPFService {
@@ -32,12 +29,26 @@ public class PPFServiceImpl implements PPFService {
 	}
 
 	@Override
-	public void updatePPFInvestment(PPFTransaction stockTxn, Investment investment) {
-		PPF ppfInvestment = (PPF) investment;
-		ppfInvestment.setInvestmentValue(ppfInvestment.getInvestmentValue() + stockTxn.getTxnAmount());
-		ppfInvestment.getTransactions().add(stockTxn);
-		stockTxn.setInvestment(ppfInvestment);
-		ppfRepository.save(ppfInvestment);
+	public PPFTransaction addInvestment(Transaction txn, PortFolio port) {
+		PPFTransaction stockTxn = (PPFTransaction) txn;
+		double txnAmount = stockTxn.getTxnAmount();
+		PPF ppf = new PPF();
+		ppf.setInvestmentValue(txnAmount);
+		ppf.setCurrentValue(txnAmount);
+		ppf.setInvestmentType(InvestmentType.PPF);
+		ppf.setNetProfit(0);
+		ppf.setInstitutionName(stockTxn.getInstitutionName());
+		List<Transaction> transactions = new ArrayList<>();
+		transactions.add(stockTxn);
+		ppf.setTransactions(transactions);
+		stockTxn.setInvestment(ppf);
+		List<Investment> invLst = new ArrayList<>();
+		invLst.add(ppf);
+		port.setInvestments(invLst);
+		ppf.setPorfolio(port);
+		portRepository.save(port);
+		return stockTxn;
+
 	}
 
 	public void addPPFInvestment(PPFTransaction stockTxn, PortFolio port) {
@@ -55,17 +66,6 @@ public class PPFServiceImpl implements PPFService {
 		port.setInvestments(invLst);
 		stockInvestment.setPorfolio(port);
 		portRepository.save(port);
-	}
-
-	@Override
-	public PPFTransaction mapToEntityTransaction(@Valid TransactionRequest txnRequest) {
-		PPFTransaction stockTxn = new PPFTransaction();
-		stockTxn.setFolioNumber(txnRequest.folioNumber());
-		stockTxn.setInstitutionName(txnRequest.institutionName());
-		stockTxn.setTxnAmount(txnRequest.txnAmount());
-		stockTxn.setTxnDate(txnRequest.txnDate());
-		stockTxn.setTxnType(txnRequest.txnType());
-		return stockTxn;
 	}
 
 	@Override
@@ -89,29 +89,6 @@ public class PPFServiceImpl implements PPFService {
 		stockTxn.setInvestment(stock);
 		ppfRepository.save(stock);
 		return stockTxn;
-	}
-
-	@Override
-	public PPFTransaction addInvestment(Transaction txn, PortFolio port) {
-		PPFTransaction stockTxn = (PPFTransaction) txn;
-		double txnAmount = stockTxn.getTxnAmount();
-		PPF ppf = new PPF();
-		ppf.setInvestmentValue(txnAmount);
-		ppf.setCurrentValue(txnAmount);
-		ppf.setInvestmentType(InvestmentType.STOCK);
-		ppf.setNetProfit(0);
-		ppf.setInstitutionName(stockTxn.getInstitutionName());
-		List<Transaction> transactions = new ArrayList<>();
-		transactions.add(stockTxn);
-		ppf.setTransactions(transactions);
-		stockTxn.setInvestment(ppf);
-		List<Investment> invLst = new ArrayList<>();
-		invLst.add(ppf);
-		port.setInvestments(invLst);
-		ppf.setPorfolio(port);
-		portRepository.save(port);
-		return stockTxn;
-
 	}
 
 	@Override
@@ -142,6 +119,15 @@ public class PPFServiceImpl implements PPFService {
 
 		ppfRepository.save(stockInvestment);
 
+	}
+
+	@Override
+	public void updatePPFInvestment(PPFTransaction stockTxn, Investment investment) {
+		PPF ppfInvestment = (PPF) investment;
+		ppfInvestment.setInvestmentValue(ppfInvestment.getInvestmentValue() + stockTxn.getTxnAmount());
+		ppfInvestment.getTransactions().add(stockTxn);
+		stockTxn.setInvestment(ppfInvestment);
+		ppfRepository.save(ppfInvestment);
 	}
 
 }

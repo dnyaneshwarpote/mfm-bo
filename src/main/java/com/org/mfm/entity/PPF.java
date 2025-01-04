@@ -15,9 +15,5 @@ public class PPF extends Investment {
 	@Id
 	private int id;
 	private String institutionName;
-	private float quantity;
-	private float nav;
-	private float heldQuantity;
-	private double averagePrice;
 
 }

@@ -33,6 +33,7 @@ public class Investment {
 	private double netProfit;
 	private double currentValue;
 	private double dayGain;
+	private float cagr;
 
 	@Enumerated(EnumType.STRING)
 	private InvestmentType investmentType;

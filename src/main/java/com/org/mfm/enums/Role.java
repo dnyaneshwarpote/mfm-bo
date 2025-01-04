@@ -10,9 +10,7 @@ import static com.org.mfm.enums.Permissions.MANAGER_READ;
 import static com.org.mfm.enums.Permissions.MANAGER_UPDATE;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import lombok.Getter;
 
@@ -24,12 +22,11 @@ public enum Role {
 
 	;
 
+	@Getter
+	private final Set<Permissions> permissions;
+
 	Role(Set<Permissions> permissions) {
 		this.permissions = permissions;
 	}
 
-	@Getter
-	private final Set<Permissions> permissions;
-
-	
 }

@@ -32,27 +32,6 @@ public class AuthenticationService {
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 
-	public AuthenticationResponse register(UserRequest request) {
-		User user = new User();
-		user.setFirstName(request.firstName());
-		user.setLastName(request.lastName());
-		user.setUserName(request.userName());
-		user.setEmail(request.email());
-		user.setContact(request.contact());
-		user.setPassword(passwordEncoder.encode(request.password()));
-		user.setRole(request.role());
-
-		var savedUser = repository.save(user);
-		var jwtToken = jwtService.generateToken(user);
-		var refreshToken = jwtService.generateRefreshToken(user);
-		saveUserToken(savedUser, jwtToken);
-
-		AuthenticationResponse res = new AuthenticationResponse();
-		res.setAccessToken(jwtToken);
-		res.setRefreshToken(refreshToken);
-		return res;
-	}
-
 	public AuthenticationResponse authenticate(AuthenticationRequest request) {
 		authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.userName(), request.password()));
@@ -66,28 +45,6 @@ public class AuthenticationService {
 		res.setRefreshToken(refreshToken);
 
 		return res;
-	}
-
-	private void saveUserToken(User user, String jwtToken) {
-		JwtToken token = new JwtToken();
-		token.setUser(user);
-		token.setToken(jwtToken);
-		token.setTokenType(TokenType.BEARER);
-		token.setExpired(false);
-		token.setRevoked(false);
-
-		tokenRepository.save(token);
-	}
-
-	private void revokeAllUserTokens(User user) {
-		var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-		if (validUserTokens.isEmpty())
-			return;
-		validUserTokens.forEach(token -> {
-			token.setExpired(true);
-			token.setRevoked(true);
-		});
-		tokenRepository.saveAll(validUserTokens);
 	}
 
 	public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -112,5 +69,48 @@ public class AuthenticationService {
 				new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
 			}
 		}
+	}
+
+	public AuthenticationResponse register(UserRequest request) {
+		User user = new User();
+		user.setFirstName(request.firstName());
+		user.setLastName(request.lastName());
+		user.setUserName(request.userName());
+		user.setEmail(request.email());
+		user.setContact(request.contact());
+		user.setPassword(passwordEncoder.encode(request.password()));
+		user.setRole(request.role());
+
+		var savedUser = repository.save(user);
+		var jwtToken = jwtService.generateToken(user);
+		var refreshToken = jwtService.generateRefreshToken(user);
+		saveUserToken(savedUser, jwtToken);
+
+		AuthenticationResponse res = new AuthenticationResponse();
+		res.setAccessToken(jwtToken);
+		res.setRefreshToken(refreshToken);
+		return res;
+	}
+
+	private void revokeAllUserTokens(User user) {
+		var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+		if (validUserTokens.isEmpty())
+			return;
+		validUserTokens.forEach(token -> {
+			token.setExpired(true);
+			token.setRevoked(true);
+		});
+		tokenRepository.saveAll(validUserTokens);
+	}
+
+	private void saveUserToken(User user, String jwtToken) {
+		JwtToken token = new JwtToken();
+		token.setUser(user);
+		token.setToken(jwtToken);
+		token.setTokenType(TokenType.BEARER);
+		token.setExpired(false);
+		token.setRevoked(false);
+
+		tokenRepository.save(token);
 	}
 }

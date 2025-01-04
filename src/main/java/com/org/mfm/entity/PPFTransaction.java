@@ -9,6 +9,6 @@ import lombok.Setter;
 @Entity
 public class PPFTransaction extends Transaction {
 
-	private String institutionName;	
+	private String institutionName;
 
 }

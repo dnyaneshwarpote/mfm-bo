@@ -28,8 +28,9 @@ public class InvestmentServiceImpl {
 		serviceMap.put(InvestmentType.STOCK, stockService);
 	}
 
-	public InvestmentService getInvestmentServiceInstance(InvestmentType investmentType) {
-		return serviceMap.get(investmentType);
+	public List<?> findAllByFolioNumber(int folioNumber) {
+		PortFolio port = portRepository.findById(folioNumber).orElse(new PortFolio());
+		return port.getInvestments();
 	}
 
 	public List<?> getInvestments(InvestmentType invType, int folioNumber) {
@@ -37,9 +38,8 @@ public class InvestmentServiceImpl {
 		return invService.findAllByFolioNumber(folioNumber);
 	}
 
-	public List<?> findAllByFolioNumber(int folioNumber) {
-		PortFolio port = portRepository.findById(folioNumber).orElse(new PortFolio());
-		return port.getInvestments();
+	public InvestmentService getInvestmentServiceInstance(InvestmentType investmentType) {
+		return serviceMap.get(investmentType);
 	}
 
 }

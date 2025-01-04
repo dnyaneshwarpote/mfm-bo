@@ -37,16 +37,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AppSecurityConfiguration {
 
-	private final JwtAuthenticationFilter jwtAuthFilter;
-	private final AuthenticationProvider authenticationProvider;
-	private final LogoutHandler logoutHandler;
-
 	public static final String LOGIN_URL = "/login";
 	public static final String LOGOUT_URL = "/api/v1/auth/logout";
 	public static final String LOGIN_FAIL_URL = LOGIN_URL + "?error";
+
 	public static final String DEFAULT_SUCCESS_URL = "/home";
 	public static final String MANAGEMENT = "/api/v1/management/**";
 	public static final String ADMIN_URL = "/api/v1/admin/**";
+	private final JwtAuthenticationFilter jwtAuthFilter;
+	private final AuthenticationProvider authenticationProvider;
+	private final LogoutHandler logoutHandler;
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -54,11 +54,9 @@ public class AppSecurityConfiguration {
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
 						.requestMatchers("/api/v1/auth/**", "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**",
-								"/user/**",
-								"/swagger-resources", "/swagger-resources/**", "/configuration/ui",
+								"/user/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
 								"/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html")
-						.permitAll()
-						.requestMatchers(MANAGEMENT).hasAnyRole(ADMIN.name(), MANAGER.name())
+						.permitAll().requestMatchers(MANAGEMENT).hasAnyRole(ADMIN.name(), MANAGER.name())
 						.requestMatchers(GET, MANAGEMENT).hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
 						.requestMatchers(POST, MANAGEMENT).hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
 						.requestMatchers(PUT, MANAGEMENT).hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())

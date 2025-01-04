@@ -26,6 +26,6 @@ public class MfmUser {
 	private String userName;
 	private String password;
 	@ManyToMany(fetch = FetchType.EAGER)
-	Collection<Role> role=new ArrayList<>();
+	Collection<Role> role = new ArrayList<>();
 
 }

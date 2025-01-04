@@ -8,11 +8,11 @@ public enum Permissions {
 	MANAGER_READ("management:read"), MANAGER_UPDATE("management:update"), MANAGER_CREATE("management:create"),
 	MANAGER_DELETE("management:delete");
 
+	@Getter
+	private final String permission;
+
 	Permissions(String permission) {
 		this.permission = permission;
 	}
-
-	@Getter
-	private final String permission;
 
 }

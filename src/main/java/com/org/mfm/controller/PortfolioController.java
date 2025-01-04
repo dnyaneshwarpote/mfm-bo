@@ -45,6 +45,15 @@ public class PortfolioController {
 		return ResponseEntity.ok(this.folioService.createPortfolio(folioRequest));
 	}
 
+	@Operation(description = "Delete API for Portfolio", summary = "Save API for Portfolio", responses = {
+			@ApiResponse(description = "Success", responseCode = "200"),
+			@ApiResponse(description = "Not found", responseCode = "404"),
+			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
+	@DeleteMapping("/delete/{folioNumber}")
+	public void deleteTransaction(int folioNumber) {
+		this.folioService.deletePortFolio(folioNumber);
+	}
+
 	@Operation(description = "Get API for Portfolio Details", summary = "Get API for Portfolio Details", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Not found", responseCode = "404"),
@@ -124,15 +133,6 @@ public class PortfolioController {
 
 		return ResponseEntity.ok(respo);
 
-	}
-
-	@Operation(description = "Delete API for Portfolio", summary = "Save API for Portfolio", responses = {
-			@ApiResponse(description = "Success", responseCode = "200"),
-			@ApiResponse(description = "Not found", responseCode = "404"),
-			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
-	@DeleteMapping("/delete/{folioNumber}")
-	public void deleteTransaction(int folioNumber) {
-		this.folioService.deletePortFolio(folioNumber);
 	}
 
 }

@@ -23,13 +23,8 @@ public class AppConfig {
 	private final UserService userService;
 
 	@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	UserDetailsService userDetailsService() {
-		return userService::getUserByUserName;
+	AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+		return config.getAuthenticationManager();
 	}
 
 	@Bean
@@ -41,7 +36,12 @@ public class AppConfig {
 	}
 
 	@Bean
-	AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-		return config.getAuthenticationManager();
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	UserDetailsService userDetailsService() {
+		return userService::getUserByUserName;
 	}
 }

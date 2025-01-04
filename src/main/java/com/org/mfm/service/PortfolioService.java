@@ -5,10 +5,10 @@ import com.org.mfm.entity.PortFolio;
 
 public interface PortfolioService {
 
-	PortFolio getPortFolio(int folioNumber);
-
 	PortFolio createPortfolio(PortfolioRequest folioRequest);
 
 	void deletePortFolio(int folioNumber);
+
+	PortFolio getPortFolio(int folioNumber);
 
 }

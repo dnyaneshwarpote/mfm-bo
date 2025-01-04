@@ -5,14 +5,11 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.org.mfm.dao.PPFRepository;
 import com.org.mfm.dao.PPFTransactionRepository;
-import com.org.mfm.dao.TransactionRepository;
 import com.org.mfm.entity.Investment;
 import com.org.mfm.entity.PPF;
 import com.org.mfm.entity.PPFTransaction;
 import com.org.mfm.entity.PortFolio;
-import com.org.mfm.entity.Stock;
 import com.org.mfm.entity.Transaction;
 import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.service.InvestmentService;
@@ -26,17 +23,13 @@ public class PPFTransactionServiceImpl implements PPFTransactionService {
 	private InvestmentService investmentService;
 	private PortfolioService portfolioService;
 	private PPFTransactionRepository ppfTxnRepo;
-	private TransactionRepository txnRepo;
-	private PPFRepository ppfRepo;
 
 	public PPFTransactionServiceImpl(PPFService ppfService, PortfolioService portfolioService,
-			PPFTransactionRepository stockTxnRepo, TransactionRepository txnRepo, PPFRepository ppfRepo) {
+			PPFTransactionRepository stockTxnRepo) {
 		super();
 		this.investmentService = ppfService;
 		this.portfolioService = portfolioService;
 		this.ppfTxnRepo = stockTxnRepo;
-		this.txnRepo = txnRepo;
-		this.ppfRepo = ppfRepo;
 
 	}
 
@@ -59,7 +52,7 @@ public class PPFTransactionServiceImpl implements PPFTransactionService {
 		} else {
 			return this.investmentService.addInvestment(ppfTxn, port);
 		}
-		//return ppfTxnRepo.save(ppfTxn);
+		// return ppfTxnRepo.save(ppfTxn);
 	}
 
 }
