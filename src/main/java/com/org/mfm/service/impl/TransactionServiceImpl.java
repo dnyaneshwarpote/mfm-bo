@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.org.mfm.dao.PPFRepository;
-import com.org.mfm.dao.TransactionRepository;
 import com.org.mfm.entity.PPF;
 import com.org.mfm.entity.PPFTransaction;
 import com.org.mfm.entity.Transaction;
 import com.org.mfm.enums.InvestmentType;
+import com.org.mfm.repository.PPFRepository;
+import com.org.mfm.repository.TransactionRepository;
 import com.org.mfm.service.PPFTransactionService;
 import com.org.mfm.service.StockTransactionService;
 import com.org.mfm.service.TransactionService;

@@ -2,10 +2,10 @@ package com.org.mfm.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.org.mfm.dao.PortfolioRepository;
 import com.org.mfm.dto.PortfolioRequest;
 import com.org.mfm.entity.Investor;
 import com.org.mfm.entity.PortFolio;
+import com.org.mfm.repository.PortfolioRepository;
 import com.org.mfm.service.PortfolioService;
 
 @Service

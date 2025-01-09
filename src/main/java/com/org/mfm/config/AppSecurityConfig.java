@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class AppSecurityConfiguration {
+public class AppSecurityConfig {
 
 	public static final String LOGIN_URL = "/login";
 	public static final String LOGOUT_URL = "/api/v1/auth/logout";
@@ -53,10 +53,13 @@ public class AppSecurityConfiguration {
 
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-						.requestMatchers("/api/v1/auth/**", "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**",
-								"/user/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
-								"/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html")
-						.permitAll().requestMatchers(MANAGEMENT).hasAnyRole(ADMIN.name(), MANAGER.name())
+						.requestMatchers("/user/authenticate/**", "/user/create/**", "/user/refresh-token/**",
+								"/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
+								"/swagger-resources/**", "/configuration/ui", "/configuration/security",
+								"/swagger-ui/**", "/webjars/**", "/swagger-ui.html")
+						.permitAll()
+
+						.requestMatchers(MANAGEMENT).hasAnyRole(ADMIN.name(), MANAGER.name())
 						.requestMatchers(GET, MANAGEMENT).hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
 						.requestMatchers(POST, MANAGEMENT).hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
 						.requestMatchers(PUT, MANAGEMENT).hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())

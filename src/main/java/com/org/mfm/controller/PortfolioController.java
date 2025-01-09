@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +38,7 @@ public class PortfolioController {
 		this.folioService = folioService;
 	}
 
-	@Operation(description = "Generate/Create new Portfolio", summary = "Generate/Create new Portfolio", responses = {
+	@Operation(description = "API to generate/Create new Portfolio", summary = "Generate/Create new Portfolio", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@PostMapping("/generate")
@@ -45,21 +46,21 @@ public class PortfolioController {
 		return ResponseEntity.ok(this.folioService.createPortfolio(folioRequest));
 	}
 
-	@Operation(description = "Delete API for Portfolio", summary = "Save API for Portfolio", responses = {
+	@Operation(description = "API to delete the Portfolio", summary = "Delete Portfolio details", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Not found", responseCode = "404"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@DeleteMapping("/delete/{folioNumber}")
-	public void deleteTransaction(int folioNumber) {
+	public void deleteTransaction(@PathVariable("folioNumber") int folioNumber) {
 		this.folioService.deletePortFolio(folioNumber);
 	}
 
-	@Operation(description = "Get API for Portfolio Details", summary = "Get API for Portfolio Details", responses = {
+	@Operation(description = "API to fetch Portfolio details", summary = "Get Portfolio Details", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Not found", responseCode = "404"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@GetMapping("/fetch/{folioNumber}")
-	public ResponseEntity<PortfolioResponse> loadPortfolio(int folioNumber) {
+	public ResponseEntity<PortfolioResponse> loadPortfolio(@PathVariable("folioNumber") int folioNumber) {
 		PortFolio folio = this.folioService.getPortFolio(folioNumber);
 		double networth = 0;
 		List<Investment> investments = folio.getInvestments();

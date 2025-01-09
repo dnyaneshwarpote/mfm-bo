@@ -28,11 +28,12 @@ public class Investment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
 	private double investmentValue;
 	private double netProfit;
 	private double currentValue;
 	private double dayGain;
+	private double realizedGain;
+	private double unrealizedGain;
 	private float cagr;
 
 	@Enumerated(EnumType.STRING)

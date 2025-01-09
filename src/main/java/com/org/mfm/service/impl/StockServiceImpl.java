@@ -6,14 +6,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.org.mfm.dao.PortfolioRepository;
-import com.org.mfm.dao.StockRepository;
 import com.org.mfm.entity.Investment;
 import com.org.mfm.entity.PortFolio;
 import com.org.mfm.entity.Stock;
 import com.org.mfm.entity.StockTransaction;
 import com.org.mfm.entity.Transaction;
 import com.org.mfm.enums.InvestmentType;
+import com.org.mfm.repository.PortfolioRepository;
+import com.org.mfm.repository.StockRepository;
 import com.org.mfm.service.StockService;
 
 @Service

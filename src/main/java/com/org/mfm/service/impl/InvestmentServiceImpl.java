@@ -6,11 +6,11 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.org.mfm.dao.InvestmentRepository;
-import com.org.mfm.dao.PortfolioRepository;
 import com.org.mfm.entity.Investment;
 import com.org.mfm.entity.PortFolio;
 import com.org.mfm.enums.InvestmentType;
+import com.org.mfm.repository.InvestmentRepository;
+import com.org.mfm.repository.PortfolioRepository;
 import com.org.mfm.service.InvestmentService;
 import com.org.mfm.service.StockService;
 

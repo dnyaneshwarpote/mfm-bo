@@ -1,4 +1,4 @@
-package com.org.mfm.response;
+package com.org.mfm.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

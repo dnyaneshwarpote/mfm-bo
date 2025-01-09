@@ -1,4 +1,4 @@
-package com.org.mfm.dao;
+package com.org.mfm.repository;
 
 import java.util.List;
 

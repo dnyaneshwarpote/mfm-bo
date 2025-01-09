@@ -1,4 +1,4 @@
-package com.org.mfm.dao;
+package com.org.mfm.repository;
 
 import java.util.List;
 
@@ -10,6 +10,6 @@ import com.org.mfm.entity.Transaction;
 public interface StockTransactionRepository extends JpaRepository<StockTransaction, Integer> {
 	List<Transaction> findAllByFolioNumber(Integer folioNumber);
 
-	List<StockTransaction> findAllByFolioNumberAndStockName(Integer folioNumber, String stockName);
+	List<Transaction> findAllByFolioNumberAndStockName(Integer folioNumber, String stockName);
 
 }

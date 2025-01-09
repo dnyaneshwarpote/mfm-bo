@@ -9,14 +9,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.org.mfm.dao.TokenRepository;
-import com.org.mfm.dao.UserRepository;
-import com.org.mfm.dto.AuthenticationRequest;
-import com.org.mfm.dto.UserRequest;
+import com.org.mfm.dto.AuthenticationResponse;
+import com.org.mfm.dto.UserDto;
+import com.org.mfm.dto.mapper.UserDtoMapper;
 import com.org.mfm.entity.JwtToken;
 import com.org.mfm.entity.User;
 import com.org.mfm.enums.TokenType;
-import com.org.mfm.response.AuthenticationResponse;
+import com.org.mfm.repository.TokenRepository;
+import com.org.mfm.repository.UserRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,9 +30,11 @@ public class AuthenticationService {
 	private final TokenRepository tokenRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
+	private final UserDtoMapper userDtoMapper;
 	private final AuthenticationManager authenticationManager;
+	
 
-	public AuthenticationResponse authenticate(AuthenticationRequest request) {
+	public AuthenticationResponse authenticate(UserDto request) {
 		authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.userName(), request.password()));
 		User user = repository.findByUserName(request.userName()).orElseThrow();
@@ -71,16 +73,9 @@ public class AuthenticationService {
 		}
 	}
 
-	public AuthenticationResponse register(UserRequest request) {
-		User user = new User();
-		user.setFirstName(request.firstName());
-		user.setLastName(request.lastName());
-		user.setUserName(request.userName());
-		user.setEmail(request.email());
-		user.setContact(request.contact());
+	public AuthenticationResponse register(UserDto request) {
+		User user=this.userDtoMapper.toEntity(request);
 		user.setPassword(passwordEncoder.encode(request.password()));
-		user.setRole(request.role());
-
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);
 		var refreshToken = jwtService.generateRefreshToken(user);

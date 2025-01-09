@@ -2,8 +2,8 @@ package com.org.mfm.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.org.mfm.dao.UserRepository;
 import com.org.mfm.entity.User;
+import com.org.mfm.repository.UserRepository;
 import com.org.mfm.service.UserService;
 
 @Service

@@ -1,4 +1,3 @@
-
 package com.org.mfm.controller;
 
 import java.util.List;
@@ -12,8 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.org.mfm.TransactionDtoMapper;
 import com.org.mfm.dto.TransactionDto;
+import com.org.mfm.dto.mapper.TransactionDtoMapper;
 import com.org.mfm.entity.Transaction;
 import com.org.mfm.service.TransactionService;
 
@@ -22,9 +21,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-
 @RequestMapping("/transaction")
-@Tag(name = "Transaction", description = "Transaction Controller for Mutual Fund, Stock, PPF, FD and RD")
+@Tag(name = "Transaction", description = "Controller for Mutual Fund, Stock, PPF, FD and RD transactions")
 public class TransactionController {
 
 	private TransactionService txnService;
@@ -35,29 +33,26 @@ public class TransactionController {
 		this.txnDtoMapper = txnDtoMapper;
 	}
 
-	@Operation(description = "Get endpoint for manager", summary = "This is a summary for management get endpoint", responses = {
+	@Operation(description = "API to addition of new transaction", summary = "Record/add new transaction", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@PostMapping("/add")
 	public ResponseEntity<TransactionDto> addTransaction(TransactionDto txnRequest) {
 
 		Transaction txn = this.txnDtoMapper.toEntity(txnRequest);
-
 		Transaction savedTxn = this.txnService.saveTransaction(txn);
-
 		return ResponseEntity.ok(this.txnDtoMapper.toDto(savedTxn));
 	}
 
-	@Operation(description = "Delete transaction endpoint", summary = "Delete Transaction", responses = {
+	@Operation(description = "API to deletion of the transaction", summary = "Delete the transaction", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@DeleteMapping("/delete")
 	public void deleteTransaction(TransactionDto txnRequest) {
 		this.txnService.deleteTransaction(txnRequest.txnId());
-
 	}
 
-	@Operation(description = "Get endpoint for Transaction", summary = "This is a summary for management get endpoint", responses = {
+	@Operation(description = "API to fetch the transaction details", summary = "Get the transaction details", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@GetMapping("/get/{txnId}")
@@ -67,7 +62,7 @@ public class TransactionController {
 
 	}
 
-	@Operation(description = "Get endpoint for transactions based on portfolio", summary = "Get endpoint for transactions", responses = {
+	@Operation(description = "API to fetch all transactions associated with folio number", summary = "Get all the transactions recorded under current portfolio", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@GetMapping("/get-all/{folioNumber}")
@@ -77,6 +72,9 @@ public class TransactionController {
 
 	}
 
+	@Operation(description = "API to update the transaction details", summary = "Update the transaction details", responses = {
+			@ApiResponse(description = "Success", responseCode = "200"),
+			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@PutMapping("/update")
 	public void updateTransaction(TransactionDto txnRequest) {
 		Transaction txn = this.txnDtoMapper.toEntity(txnRequest);

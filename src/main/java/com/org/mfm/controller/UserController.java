@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.org.mfm.dto.AuthenticationRequest;
-import com.org.mfm.dto.UserRequest;
-import com.org.mfm.response.AuthenticationResponse;
+import com.org.mfm.dto.AuthenticationResponse;
+import com.org.mfm.dto.UserDto;
 import com.org.mfm.service.AuthenticationService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,32 +31,32 @@ public class UserController {
 	@Autowired
 	private AuthenticationService service;
 
-	@Operation(description = "User Activation", summary = "Activate the newly created User", responses = {
+	@Operation(description = "API to activate the User", summary = "Activate User", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@PutMapping("/activate")
-	public ResponseEntity<AuthenticationResponse> activate(@RequestBody UserRequest request) {
+	public ResponseEntity<AuthenticationResponse> activate(@RequestBody UserDto request) {
 		return ResponseEntity.ok(service.register(request));
 	}
 
 	@PostMapping("/authenticate")
-	public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+	public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody UserDto request) {
 		return ResponseEntity.ok(service.authenticate(request));
 	}
 
-	@Operation(description = "Get registered User", summary = "Get registered User", responses = {
+	@Operation(description = "API to get registered User", summary = "Get registered User", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@GetMapping("/get")
-	public ResponseEntity<AuthenticationResponse> getUser(@RequestBody UserRequest request) {
+	public ResponseEntity<AuthenticationResponse> getUser(@RequestBody UserDto request) {
 		return ResponseEntity.ok(service.register(request));
 	}
 
-	@Operation(description = "Get the list of all registered Users", summary = "List of registered Users", responses = {
+	@Operation(description = "API to get the list of Users", summary = "List of Users", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@GetMapping("/get-all")
-	public ResponseEntity<AuthenticationResponse> getUsers(@RequestBody UserRequest request) {
+	public ResponseEntity<AuthenticationResponse> getUsers(@RequestBody UserDto request) {
 		return ResponseEntity.ok(service.register(request));
 	}
 
@@ -66,11 +65,11 @@ public class UserController {
 		service.refreshToken(request, response);
 	}
 
-	@Operation(description = "New User Creation", summary = "Create new user", responses = {
+	@Operation(description = "API to Register/Create new User", summary = "Register/Create new user", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@PostMapping("/create")
-	public ResponseEntity<AuthenticationResponse> register(@RequestBody UserRequest request) {
+	public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDto request) {
 		return ResponseEntity.ok(service.register(request));
 	}
 
