@@ -21,9 +21,26 @@ import com.org.mfm.service.PPFService;
 @Service
 public class PPFServiceImpl implements PPFService {
 
-	private PPFRepository ppfRepository;
+	// dgddfd
+	private static final Map<Integer, Double> historicalRates = new HashMap<>();
+
+	static {
+		// Populate with some sample data (Year -> Interest Rate)
+		historicalRates.put(2015, 8.7);
+		historicalRates.put(2016, 8.1);
+		historicalRates.put(2017, 7.9);
+		historicalRates.put(2018, 7.6);
+		historicalRates.put(2019, 8.0);
+		historicalRates.put(2020, 7.9);
+		historicalRates.put(2021, 7.1);
+		historicalRates.put(2022, 7.1);
+		historicalRates.put(2023, 7.1);
+		historicalRates.put(2024, 7.1);
+	}
 
 	private PortfolioRepository portRepository;
+
+	private PPFRepository ppfRepository;
 
 	public PPFServiceImpl(PPFRepository stockRepository, PortfolioRepository portRepository) {
 		this.ppfRepository = stockRepository;
@@ -35,8 +52,7 @@ public class PPFServiceImpl implements PPFService {
 		PPFTransaction stockTxn = (PPFTransaction) txn;
 		double txnAmount = stockTxn.getTxnAmount();
 		PPF ppf = new PPF();
-		
-		
+
 		ppf.setInvestmentValue(txnAmount);
 		ppf.setCurrentValue(txnAmount);
 		ppf.setInvestmentType(InvestmentType.PPF);
@@ -70,6 +86,41 @@ public class PPFServiceImpl implements PPFService {
 		port.setInvestments(invLst);
 		stockInvestment.setPorfolio(port);
 		portRepository.save(port);
+	}
+
+	public void calculateInterest(double annualDeposit, int startYear, int endYear) {
+		// double annualDeposit = scanner.nextDouble();
+
+		// Input: Start year
+		System.out.print("Enter the start year of investment: ");
+		// int startYear = scanner.nextInt();
+
+		// Input: End year
+		System.out.print("Enter the end year of investment: ");
+		// int endYear = scanner.nextInt();
+
+		double totalInterest = 0.0;
+		double totalAmount = 0.0;
+
+		// Calculate interest for each year based on historical rates
+		for (int year = startYear; year <= endYear; year++) {
+			if (historicalRates.containsKey(year)) {
+				double rate = historicalRates.get(year);
+				double interest = (totalAmount + annualDeposit) * rate / 100;
+				totalInterest += interest;
+				totalAmount += annualDeposit + interest;
+
+				System.out.printf("Year: %d, Rate: %.2f%%, Interest Earned: ₹%.2f, Total Amount: ₹%.2f%n", year, rate,
+						interest, totalAmount);
+			} else {
+				System.out.printf("Year: %d - No historical rate available. Skipping.%n", year);
+			}
+		}
+
+		// Output the results
+		System.out.printf("Total Interest Earned: ₹%.2f%n", totalInterest);
+		System.out.printf("Final Amount (Principal + Interest): ₹%.2f%n", totalAmount);
+
 	}
 
 	@Override
@@ -133,59 +184,5 @@ public class PPFServiceImpl implements PPFService {
 		stockTxn.setInvestment(ppfInvestment);
 		ppfRepository.save(ppfInvestment);
 	}
-	
-	//dgddfd
-	private static final Map<Integer, Double> historicalRates = new HashMap<>();
-
-    static {
-        // Populate with some sample data (Year -> Interest Rate)
-        historicalRates.put(2015, 8.7);
-        historicalRates.put(2016, 8.1);
-        historicalRates.put(2017, 7.9);
-        historicalRates.put(2018, 7.6);
-        historicalRates.put(2019, 8.0);
-        historicalRates.put(2020, 7.9);
-        historicalRates.put(2021, 7.1);
-        historicalRates.put(2022, 7.1);
-        historicalRates.put(2023, 7.1);
-        historicalRates.put(2024, 7.1);
-    }
-    
-    public void calculateInterest(double annualDeposit,int startYear,int endYear){
-    	//double annualDeposit = scanner.nextDouble();
-
-        // Input: Start year
-        System.out.print("Enter the start year of investment: ");
-       // int startYear = scanner.nextInt();
-
-        // Input: End year
-        System.out.print("Enter the end year of investment: ");
-       // int endYear = scanner.nextInt();
-
-        double totalInterest = 0.0;
-        double totalAmount = 0.0;
-
-        // Calculate interest for each year based on historical rates
-        for (int year = startYear; year <= endYear; year++) {
-            if (historicalRates.containsKey(year)) {
-                double rate = historicalRates.get(year);
-                double interest = (totalAmount + annualDeposit) * rate / 100;
-                totalInterest += interest;
-                totalAmount += annualDeposit + interest;
-
-                System.out.printf("Year: %d, Rate: %.2f%%, Interest Earned: ₹%.2f, Total Amount: ₹%.2f%n",
-                        year, rate, interest, totalAmount);
-            } else {
-                System.out.printf("Year: %d - No historical rate available. Skipping.%n", year);
-            }
-        }
-
-        // Output the results
-        System.out.printf("Total Interest Earned: ₹%.2f%n", totalInterest);
-        System.out.printf("Final Amount (Principal + Interest): ₹%.2f%n", totalAmount);
-
-    }
-    
-	
 
 }

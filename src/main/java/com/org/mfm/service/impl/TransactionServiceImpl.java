@@ -17,11 +17,11 @@ import com.org.mfm.service.TransactionService;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-	private StockTransactionService stockTxnService;
+	private PPFRepository ppfRepo;
 	private PPFTransactionService ppfTxnService;
 
+	private StockTransactionService stockTxnService;
 	private TransactionRepository txnRepo;
-	private PPFRepository ppfRepo;
 
 	public TransactionServiceImpl(StockTransactionService stockTxnService, PPFTransactionService ppfTxnService,
 			TransactionRepository txnRepo, PPFRepository ppfRepo) {

@@ -25,9 +25,13 @@ import lombok.Setter;
 @Entity
 public class JwtToken {
 
+	private boolean expired;
+
 	@Id
 	@GeneratedValue
 	public Integer id;
+
+	private boolean revoked;
 
 	@Column(unique = true)
 	public String token;
@@ -35,10 +39,6 @@ public class JwtToken {
 	@Builder.Default
 	@Enumerated(EnumType.STRING)
 	public TokenType tokenType = TokenType.BEARER;
-
-	private boolean revoked;
-
-	private boolean expired;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")

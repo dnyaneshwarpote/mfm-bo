@@ -37,6 +37,11 @@ public class BeanConfig {
 	}
 
 	@Bean
+	ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
+
+	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
@@ -44,11 +49,6 @@ public class BeanConfig {
 	@Bean
 	UserDetailsService userDetailsService() {
 		return userService::getUserByUserName;
-	}
-
-	@Bean
-	ModelMapper modelMapper() {
-		return new ModelMapper();
 	}
 
 }

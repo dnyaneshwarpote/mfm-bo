@@ -19,13 +19,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MfmUser {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int userId;
 	private String name;
-	private String userName;
 	private String password;
 	@ManyToMany(fetch = FetchType.EAGER)
 	Collection<Role> role = new ArrayList<>();
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int userId;
+	private String userName;
 
 }

@@ -19,9 +19,9 @@ import com.org.mfm.service.StockService;
 @Service
 public class StockServiceImpl implements StockService {
 
-	private StockRepository stockRepository;
-
 	private PortfolioRepository portRepository;
+
+	private StockRepository stockRepository;
 
 	public StockServiceImpl(StockRepository stockRepository, PortfolioRepository portRepository) {
 		this.stockRepository = stockRepository;

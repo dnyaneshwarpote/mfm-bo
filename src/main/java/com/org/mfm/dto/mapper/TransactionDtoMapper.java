@@ -15,24 +15,19 @@ public class TransactionDtoMapper {
 
 		if (txn.getInvestmentType().equals(InvestmentType.PPF)) {
 			PPFTransaction savedTxn = (PPFTransaction) txn;
-			return new TransactionDto(savedTxn.getFolioNumber(), savedTxn.getTxnId(), savedTxn.getTxnDate(),
-					savedTxn.getTxnAmount(), savedTxn.getInvestmentType(), savedTxn.getTxnType(), null, null,
-					savedTxn.getInstitutionName(), 0, 0, 0, 0, savedTxn.getRateOfInt());
+			return TransactionDto.builder().txnId(savedTxn.getTxnId()).txnDate(savedTxn.getTxnDate())
+					.txnAmount(savedTxn.getTxnAmount()).invType(savedTxn.getInvestmentType())
+					.txnType(savedTxn.getTxnType()).institutionName(savedTxn.getInstitutionName()).interest(34f)
+					.rateOfInt(savedTxn.getRateOfInt()).balanceAmount(0).build();
 		} else if (txn.getInvestmentType().equals(InvestmentType.STOCK)) {
 			StockTransaction savedTxn = (StockTransaction) txn;
-			return TransactionDto.builder().folioNumber(savedTxn.getFolioNumber())
-					.txnId(savedTxn.getTxnId())
-					.txnDate(savedTxn.getTxnDate())
-					.txnAmount(savedTxn.getTxnAmount())
-					.invType(savedTxn.getInvestmentType())
-					.txnType(savedTxn.getTxnType())
-					.stockName(savedTxn.getStockName())
-					.quantity(savedTxn.getQuantity())
-					.rate(savedTxn.getRate())
-					.brokerage(savedTxn.getBrokerage()).build();
+			return TransactionDto.builder().txnId(savedTxn.getTxnId()).txnDate(savedTxn.getTxnDate())
+					.txnAmount(savedTxn.getTxnAmount()).invType(savedTxn.getInvestmentType())
+					.txnType(savedTxn.getTxnType()).stockName(savedTxn.getStockName()).quantity(savedTxn.getQuantity())
+					.rate(savedTxn.getRate()).brokerage(savedTxn.getBrokerage()).build();
 		}
-		return new TransactionDto(txn.getFolioNumber(), txn.getTxnId(), txn.getTxnDate(), txn.getTxnAmount(),
-				txn.getInvestmentType(), txn.getTxnType(), null, null, null, 0, 0, 0, 0, 0);
+		return TransactionDto.builder().txnId(txn.getTxnId()).txnDate(txn.getTxnDate()).txnAmount(txn.getTxnAmount())
+				.invType(txn.getInvestmentType()).txnType(txn.getTxnType()).build();
 
 	}
 

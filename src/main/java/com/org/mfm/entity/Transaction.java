@@ -23,18 +23,18 @@ import lombok.Setter;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Transaction {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int txnId;
-	private Date txnDate;
-	private double txnAmount;
-	private TransactionType txnType;
 	private int folioNumber;
-
 	@JoinColumn(name = "investment_id", nullable = false)
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Investment investment;
-
 	private InvestmentType investmentType;
+	private double txnAmount;
+	private Date txnDate;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int txnId;
+
+	private TransactionType txnType;
 
 }

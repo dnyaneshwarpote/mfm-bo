@@ -23,18 +23,18 @@ public class PortFolio {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int folioNumber;
 
-	private String tittle;
-
-	private double totalGain;
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "porfolio", cascade = CascadeType.ALL)
 	private List<Investment> investments;
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "porfolio", cascade = CascadeType.ALL)
-	private List<Liability> liabilities;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "investor_id", nullable = false)
 	private Investor investor;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "porfolio", cascade = CascadeType.ALL)
+	private List<Liability> liabilities;
+
+	private String tittle;
+
+	private double totalGain;
 
 }

@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/user")
-@Tag(name = "User", description = "Controller for New User Registration, Authentication and Authorization")
+@Tag(name = "User", description = "Controller for new User registration, Authentication and Authorization")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -39,6 +39,9 @@ public class UserController {
 		return ResponseEntity.ok(service.register(request));
 	}
 
+	@Operation(description = "API to authenticate the resource access ", summary = "User autheticatication", responses = {
+			@ApiResponse(description = "Success", responseCode = "200"),
+			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@PostMapping("/authenticate")
 	public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody UserDto request) {
 		return ResponseEntity.ok(service.authenticate(request));
@@ -60,12 +63,15 @@ public class UserController {
 		return ResponseEntity.ok(service.register(request));
 	}
 
+	@Operation(description = "API to refresh the token", summary = "User login token refresh", responses = {
+			@ApiResponse(description = "Success", responseCode = "200"),
+			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@PostMapping("/refresh-token")
 	public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		service.refreshToken(request, response);
 	}
 
-	@Operation(description = "API to Register/Create new User", summary = "Register/Create new user", responses = {
+	@Operation(description = "API to register/create new User", summary = "Register/Create new User", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@PostMapping("/create")

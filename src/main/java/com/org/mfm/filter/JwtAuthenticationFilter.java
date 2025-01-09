@@ -27,13 +27,14 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtService jwtService;
-	private final UserDetailsService userDetailsService;
 	private final TokenRepository tokenRepository;
+	private final UserDetailsService userDetailsService;
 
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 			@NonNull FilterChain filterChain) throws ServletException, IOException {
-		if (request.getServletPath().contains("/user/authenticate")||request.getServletPath().contains("/user/refresh-token")) {
+		if (request.getServletPath().contains("/user/authenticate")
+				|| request.getServletPath().contains("/user/refresh-token")) {
 			filterChain.doFilter(request, response);
 			return;
 		}

@@ -10,12 +10,12 @@ import lombok.Setter;
 @Entity
 public class Fund extends Investment {
 
+	private double averagePrice;
+	private String fundName;
+	private float heldQuantity;
 	@Id
 	private int id;
-	private String fundName;
-	private float quantity;
 	private float nav;
-	private float heldQuantity;
-	private double averagePrice;
+	private float quantity;
 
 }

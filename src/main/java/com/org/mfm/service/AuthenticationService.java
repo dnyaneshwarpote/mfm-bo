@@ -26,13 +26,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+	private final AuthenticationManager authenticationManager;
+	private final JwtService jwtService;
+	private final PasswordEncoder passwordEncoder;
 	private final UserRepository repository;
 	private final TokenRepository tokenRepository;
-	private final PasswordEncoder passwordEncoder;
-	private final JwtService jwtService;
 	private final UserDtoMapper userDtoMapper;
-	private final AuthenticationManager authenticationManager;
-	
 
 	public AuthenticationResponse authenticate(UserDto request) {
 		authenticationManager
@@ -74,7 +73,7 @@ public class AuthenticationService {
 	}
 
 	public AuthenticationResponse register(UserDto request) {
-		User user=this.userDtoMapper.toEntity(request);
+		User user = this.userDtoMapper.toEntity(request);
 		user.setPassword(passwordEncoder.encode(request.password()));
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);

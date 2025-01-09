@@ -35,32 +35,32 @@ public class User implements UserDetails {
 	 */
 	private static final long serialVersionUID = -1288756935376257758L;
 
-	@Id
-	@GeneratedValue
-	private Integer id;
-
-	@Column(length = 20, nullable = true, unique = true)
-	@Size(min = 3, max = 20)
-	private String userName;
-
-	@Column(length = 100)
-	private String password;
-
-	@Column(length = 25)
-	private String firstName;
-
-	@Column(length = 25)
-	private String lastName;
+	@Column(length = 12)
+	private String contact;
 
 	@Column(length = 30)
 	// @Email
 	private String email;
 
-	@Column(length = 12)
-	private String contact;
+	@Column(length = 25)
+	private String firstName;
+
+	@Id
+	@GeneratedValue
+	private Integer id;
+
+	@Column(length = 25)
+	private String lastName;
+
+	@Column(length = 100)
+	private String password;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
+
+	@Column(length = 20, nullable = true, unique = true)
+	@Size(min = 3, max = 20)
+	private String userName;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Entity
 public class PPFTransaction extends Transaction {
 
+	private double balanceAmount;
 	private String institutionName;
 	private float rateOfInt;
-
 }

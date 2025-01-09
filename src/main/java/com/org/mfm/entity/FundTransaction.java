@@ -10,7 +10,7 @@ import lombok.Setter;
 public class FundTransaction extends Transaction {
 
 	private String fundName;
-	private float quantity;
 	private float nav;
+	private float quantity;
 
 }

@@ -15,13 +15,13 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Liability {
+	private double currentValue;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private double investmentValue;
-	private double netProfit;
-	private double currentValue;
 	private LiabilityType liabilityType;
+	private double netProfit;
 
 	@ManyToOne
 	@JoinColumn(name = "liability_Id", nullable = false)

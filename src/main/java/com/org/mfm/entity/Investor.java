@@ -15,10 +15,10 @@ import lombok.Setter;
 @Entity
 public class Investor {
 
-	@Id
-	private String userName;
-
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "investor")
 	private List<PortFolio> folios = new ArrayList<>();
+
+	@Id
+	private String userName;
 
 }

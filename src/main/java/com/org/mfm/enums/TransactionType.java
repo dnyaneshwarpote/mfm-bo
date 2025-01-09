@@ -3,7 +3,7 @@ package com.org.mfm.enums;
 import lombok.Getter;
 
 public enum TransactionType {
-	BUY('B'), SELL('S'), MERGE('M'), DIVIDENT('D'), BONUS('B');
+	BONUS('B'), BUY('B'), DIVIDENT('D'), INTEREST('I'), MERGE('M'), SELL('S');
 
 	@Getter
 	public final char txnType;

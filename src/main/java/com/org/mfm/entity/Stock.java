@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class Stock extends Investment {
 
+	private double averagePrice;
+	private float heldQuantity;
 	@Id
 	private int id;
-	private String stockName;
-	private float heldQuantity;
-	private double averagePrice;
 	private double realizedProfit;
+	private String stockName;
 
 }

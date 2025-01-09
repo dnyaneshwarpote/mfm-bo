@@ -37,15 +37,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AppSecurityConfig {
 
-	public static final String LOGIN_URL = "/login";
-	public static final String LOGOUT_URL = "/api/v1/auth/logout";
-	public static final String LOGIN_FAIL_URL = LOGIN_URL + "?error";
-
-	public static final String DEFAULT_SUCCESS_URL = "/home";
-	public static final String MANAGEMENT = "/api/v1/management/**";
 	public static final String ADMIN_URL = "/api/v1/admin/**";
-	private final JwtAuthenticationFilter jwtAuthFilter;
+	public static final String DEFAULT_SUCCESS_URL = "/home";
+	public static final String LOGIN_URL = "/login";
+	public static final String LOGIN_FAIL_URL = LOGIN_URL + "?error";
+	
+	public static final String LOGOUT_URL = "/api/v1/auth/logout";
+	public static final String MANAGEMENT = "/api/v1/management/**";
 	private final AuthenticationProvider authenticationProvider;
+	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final LogoutHandler logoutHandler;
 
 	@Bean

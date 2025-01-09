@@ -17,10 +17,10 @@ import com.org.mfm.service.StockService;
 @Service
 public class InvestmentServiceImpl {
 
-	private final Map<InvestmentType, InvestmentService> serviceMap;
 	InvestmentRepository<Investment> investmentRepo;
-
 	private PortfolioRepository portRepository;
+
+	private final Map<InvestmentType, InvestmentService> serviceMap;
 
 	InvestmentServiceImpl(PortfolioRepository portRepository, StockService stockService) {
 		serviceMap = new HashMap<>();

@@ -25,8 +25,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Transaction", description = "Controller for Mutual Fund, Stock, PPF, FD and RD transactions")
 public class TransactionController {
 
-	private TransactionService txnService;
 	private TransactionDtoMapper txnDtoMapper;
+	private TransactionService txnService;
 
 	public TransactionController(TransactionService txnService, TransactionDtoMapper txnDtoMapper) {
 		this.txnService = txnService;
