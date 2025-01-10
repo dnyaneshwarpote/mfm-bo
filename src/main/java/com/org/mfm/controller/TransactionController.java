@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.org.mfm.bean.PPFTransactions;
 import com.org.mfm.dto.TransactionDto;
 import com.org.mfm.dto.mapper.TransactionDtoMapper;
 import com.org.mfm.entity.Transaction;
+import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.service.TransactionService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,6 +71,24 @@ public class TransactionController {
 	public List<TransactionDto> getTransactions(@PathVariable("folioNumber") int folioNumber) {
 		List<Transaction> txnList = this.txnService.findAllTxnsByFolioNumber(folioNumber);
 		return txnList.stream().map(txn -> this.txnDtoMapper.toDto(txn)).toList();
+
+	}
+
+	@Operation(description = "API to fetch all transactions associated with folio number", summary = "Get all the transactions recorded under current portfolio", responses = {
+			@ApiResponse(description = "Success", responseCode = "200"),
+			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
+	@GetMapping("/ppf/get-all/{folioNumber}")
+	public List<TransactionDto> getPPFTransactions(@PathVariable("folioNumber") int folioNumber) {
+		List<Transaction> txnList = this.txnService.findAllTxnsByInvestmentTypeAndFolioNumber(InvestmentType.PPF,
+				folioNumber);
+		List<PPFTransactions> list = convertTransactionToPPFTransactions(txnList);
+		return this.txnService.getTransformedTransaction(list);
+
+	}
+
+	List<PPFTransactions> convertTransactionToPPFTransactions(List<Transaction> txnList) {
+		return txnList.stream().map(ppfTxn -> new PPFTransactions(ppfTxn.getTxnId(), ppfTxn.getTxnDate(),
+				ppfTxn.getTxnAmount(), ppfTxn.getTxnType(), 0)).toList();
 
 	}
 

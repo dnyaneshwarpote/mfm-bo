@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.org.mfm.bean.PPFTransactions;
+import com.org.mfm.dto.TransactionDto;
 import com.org.mfm.entity.PPF;
 import com.org.mfm.entity.PPFTransaction;
 import com.org.mfm.entity.Transaction;
@@ -63,5 +65,17 @@ public class TransactionServiceImpl implements TransactionService {
 		return txn;
 
 	}
+
+	@Override
+	public List<Transaction> findAllTxnsByInvestmentTypeAndFolioNumber(InvestmentType investmentType, int folioNumber) {
+		return this.txnRepo.findAllByInvestmentTypeAndFolioNumber(investmentType, folioNumber);
+	}
+
+	@Override
+	public List<TransactionDto> getTransformedTransaction(List<PPFTransactions> list) {
+		return ppfTxnService.calculateAverageByYear(list);
+	}
+	
+	
 
 }
