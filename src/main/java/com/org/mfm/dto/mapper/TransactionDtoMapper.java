@@ -17,7 +17,7 @@ public class TransactionDtoMapper {
 			PPFTransaction savedTxn = (PPFTransaction) txn;
 			return TransactionDto.builder().txnId(savedTxn.getTxnId()).txnDate(savedTxn.getTxnDate())
 					.txnAmount(savedTxn.getTxnAmount()).invType(savedTxn.getInvestmentType())
-					.txnType(savedTxn.getTxnType()).institutionName(savedTxn.getInstitutionName()).interest(34f)
+					.txnType(savedTxn.getTxnType()).institutionName(savedTxn.getInstitutionName())
 					.rateOfInt(savedTxn.getRateOfInt()).build();
 		} else if (txn.getInvestmentType().equals(InvestmentType.STOCK)) {
 			StockTransaction savedTxn = (StockTransaction) txn;

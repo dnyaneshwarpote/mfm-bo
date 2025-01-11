@@ -19,4 +19,6 @@ public interface PPFTransactionService {
 
 	List<TransactionDto> calculateAverageByYear(List<PPFTransactions> transactions);
 
+	List<PPFTransactions> convertTransactionToPPFTransactions(List<Transaction> txnList);
+
 }

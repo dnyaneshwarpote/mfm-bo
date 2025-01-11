@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,8 +69,6 @@ public class PPFTransactionServiceImpl implements PPFTransactionService {
 		}
 
 	}
-	
-
 
 	private static final Map<String, Double> inttRates = new HashMap<>();
 	static {
@@ -120,7 +118,7 @@ public class PPFTransactionServiceImpl implements PPFTransactionService {
 
 		Map<Integer, List<PPFTransactions>> yearlyTransactions = transactions.stream()
 				.collect(Collectors.groupingBy(w -> w.getYear()));
-		double balanceAmount = 0;
+		double closingBalance = 0;
 		// Calculate average yearly balance for each year
 		for (int year = startYear; year <= endYear; year++) {
 			List<PPFTransactions> txns = yearlyTransactions.getOrDefault(year, Collections.emptyList());
@@ -128,22 +126,31 @@ public class PPFTransactionServiceImpl implements PPFTransactionService {
 			// Monthly balances for the year
 			double[] monthlyBalances = new double[12];
 			Arrays.fill(monthlyBalances, 0.0);
+			double yearlyClosingBalance = 0;
+			// Initializing monthly balance with default/previous year's closing balance, in
+			// case there is no transaction recorded for a month/year
+			for (int finMonth = 0; (closingBalance > 0 && finMonth < 12); finMonth++) {
+				monthlyBalances[finMonth] += closingBalance;
+			}
 			// Apply each transaction to calculate balances
 			for (PPFTransactions transaction : txns) {
 				int financialMonth = DateUtils.mapToFinancialYearMonth(transaction.getMonth()) - 1;
-				for (int finMonth = financialMonth; finMonth < 12; finMonth++) {
-					monthlyBalances[finMonth] += balanceAmount + transaction.getAmount();
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(transaction.getDate());
+				int day = calendar.get(Calendar.DATE);
+				if (day > 5) {
+					financialMonth++;
 				}
-				balanceAmount = balanceAmount + transaction.getAmount();
+				yearlyClosingBalance += transaction.getAmount();
+				for (int finMonth = financialMonth; finMonth < 12; finMonth++) {
+					monthlyBalances[finMonth] = yearlyClosingBalance + closingBalance;
+				}
+				closingBalance += transaction.getAmount();
 				updatedTxns.add(TransactionDto.builder().txnId(transaction.getTxnId())
 						.txnDate((Date) transaction.getDate()).txnAmount(transaction.getAmount())
-						.txnType(transaction.getTransactionType()).balanceAmount(balanceAmount).build());
+						.txnType(transaction.getTransactionType()).balanceAmount(closingBalance).build());
 			}
-			if (txns.isEmpty()) {
-				for (int finMonth = 0; finMonth < 12; finMonth++) {
-					monthlyBalances[finMonth] += balanceAmount;
-				}
-			}
+
 			// Calculate total balance for the year
 			double yearlyBalance = 0.0;
 			for (double monthlyBalance : monthlyBalances) {
@@ -152,23 +159,24 @@ public class PPFTransactionServiceImpl implements PPFTransactionService {
 
 			// Average yearly balance
 			double averageBalance = (yearlyBalance / 12);
-
-			Date txnDate = Date.valueOf(LocalDate.of(year + 1, Month.MARCH, 31));
 			double interrest = InterestRateUtil.calculateInterest(averageBalance,
-					inttRates.get(DateUtils.getFinancialYear(txnDate)));
-			balanceAmount = balanceAmount + interrest;
+					inttRates.get(DateUtils.getFinancialYear(Date.valueOf(LocalDate.of(year, Month.MARCH, 31)))));
+			closingBalance += interrest;
 			Date currDate = new Date(System.currentTimeMillis());
-
+			Date txnDate = Date.valueOf(LocalDate.of(year + 1, Month.MARCH, 31));
 			if (currDate.after(txnDate)) {
 				updatedTxns.add(TransactionDto.builder().txnDate(txnDate).txnAmount(interrest)
-						.txnType(TransactionType.INTEREST).balanceAmount(balanceAmount).build());
+						.txnType(TransactionType.INTEREST).balanceAmount(closingBalance).build());
 			}
 
 		}
-		Collections.sort(updatedTxns, Comparator.comparing(TransactionDto::txnDate));
 		return updatedTxns;
 	}
 
+	@Override
+	public List<PPFTransactions> convertTransactionToPPFTransactions(List<Transaction> txnList) {
+		return txnList.stream().map(ppfTxn -> new PPFTransactions(ppfTxn.getTxnId(), ppfTxn.getTxnDate(),
+				ppfTxn.getTxnAmount(), ppfTxn.getTxnType(), 0)).toList();
 
-
+	}
 }

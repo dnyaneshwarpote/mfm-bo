@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.org.mfm.bean.PPFTransactions;
 import com.org.mfm.dto.TransactionDto;
+import com.org.mfm.dto.mapper.TransactionDtoMapper;
 import com.org.mfm.entity.PPF;
 import com.org.mfm.entity.PPFTransaction;
 import com.org.mfm.entity.Transaction;
@@ -75,7 +76,16 @@ public class TransactionServiceImpl implements TransactionService {
 	public List<TransactionDto> getTransformedTransaction(List<PPFTransactions> list) {
 		return ppfTxnService.calculateAverageByYear(list);
 	}
-	
-	
+
+	@Override
+	public List<TransactionDto> getTransactions(InvestmentType invType, int folioNumber,
+			TransactionDtoMapper txnDtoMapper) {
+		List<Transaction> txnList = findAllTxnsByInvestmentTypeAndFolioNumber(invType, folioNumber);
+		if (invType.equals(InvestmentType.PPF)) {
+			List<PPFTransactions> list = this.ppfTxnService.convertTransactionToPPFTransactions(txnList);
+			return getTransformedTransaction(list);
+		}
+		return txnList.stream().map(txnDtoMapper::toDto).toList();
+	}
 
 }
