@@ -15,6 +15,6 @@ import lombok.Builder;
 @Builder
 public record TransactionDto(int folioNumber, int txnId, Date txnDate, double txnAmount, InvestmentType invType,
 		TransactionType txnType, String fundName, String stockName, String institutionName, float nav, float quantity,
-		float rate, float brokerage, float rateOfInt, double balanceAmount) {
+		float rate, float brokerage, float rateOfInt, double balanceAmount, Date maturityDate) {
 
 }

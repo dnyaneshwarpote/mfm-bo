@@ -63,15 +63,14 @@ public class TransactionController {
 
 	}
 
-	@Operation(description = "API to fetch all transactions associated with folio number and based on Investment Type", summary = "Get all the transactions recorded under current portfolio", responses = {
+	@Operation(description = "API to fetch all transactions associated Portfolio and Investment class(FUND/PPF/STOCK)", summary = "Get all the transactions recorded under current portfolio", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
 			@ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403") })
 	@GetMapping("/get-all/{investmentType}/{folioNumber}")
 	public List<TransactionDto> getTransactions(@PathVariable("investmentType") InvestmentType investmentType,
 			@PathVariable("folioNumber") int folioNumber) {
-		return this.txnService.getTransactions(investmentType,folioNumber, txnDtoMapper);
+		return this.txnService.getTransactions(investmentType, folioNumber, txnDtoMapper);
 	}
-
 
 	@Operation(description = "API to update the transaction details", summary = "Update the transaction details", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),

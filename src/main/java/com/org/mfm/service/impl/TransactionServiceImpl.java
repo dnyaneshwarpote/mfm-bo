@@ -13,6 +13,7 @@ import com.org.mfm.entity.Transaction;
 import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.repository.PPFRepository;
 import com.org.mfm.repository.TransactionRepository;
+import com.org.mfm.service.FDTransactionService;
 import com.org.mfm.service.PPFTransactionService;
 import com.org.mfm.service.StockTransactionService;
 import com.org.mfm.service.TransactionService;
@@ -22,16 +23,18 @@ public class TransactionServiceImpl implements TransactionService {
 
 	private PPFRepository ppfRepo;
 	private PPFTransactionService ppfTxnService;
+	private FDTransactionService fdTxnService;
 
 	private StockTransactionService stockTxnService;
 	private TransactionRepository txnRepo;
 
 	public TransactionServiceImpl(StockTransactionService stockTxnService, PPFTransactionService ppfTxnService,
-			TransactionRepository txnRepo, PPFRepository ppfRepo) {
+			TransactionRepository txnRepo, PPFRepository ppfRepo, FDTransactionService fdTxnService) {
 		this.stockTxnService = stockTxnService;
 		this.ppfTxnService = ppfTxnService;
 		this.txnRepo = txnRepo;
 		this.ppfRepo = ppfRepo;
+		this.fdTxnService = fdTxnService;
 
 	}
 
@@ -59,6 +62,8 @@ public class TransactionServiceImpl implements TransactionService {
 		Transaction txn = null;
 		if (txnRequest.getInvestmentType().equals(InvestmentType.PPF)) {
 			txn = ppfTxnService.saveTransaction(txnRequest);
+		} else if (txnRequest.getInvestmentType().equals(InvestmentType.FD)) {
+			txn = fdTxnService.saveTransaction(txnRequest);
 		} else {
 			txn = stockTxnService.saveTransaction(txnRequest);
 		}
