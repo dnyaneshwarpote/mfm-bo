@@ -15,8 +15,9 @@ import lombok.Setter;
 @Setter
 public class FDTransaction extends Transaction {
 
-	private String institutionName;
+	private String name;
 	private Date maturityDate;
 	private float rateOfInt;
+	private int compoundingFrequency;
 
 }

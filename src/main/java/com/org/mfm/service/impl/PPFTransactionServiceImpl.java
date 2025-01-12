@@ -59,7 +59,7 @@ public class PPFTransactionServiceImpl implements PPFTransactionService {
 		PortFolio port = this.portfolioService.getPortFolio(txnRequest.getFolioNumber());
 		Optional<Investment> investment = port.getInvestments().stream()
 				.filter(inv -> InvestmentType.PPF.equals(inv.getInvestmentType())
-						&& (((PPF) inv).getInstitutionName().equals(ppfTxn.getInstitutionName())))
+						&& (((PPF) inv).getName().equals(ppfTxn.getName())))
 				.findFirst();
 
 		if (investment.isPresent()) {

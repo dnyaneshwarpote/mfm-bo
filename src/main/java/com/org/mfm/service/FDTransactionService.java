@@ -13,12 +13,12 @@ import com.org.mfm.entity.Transaction;
 @Service
 public interface FDTransactionService {
 
-	List<FDTransaction> getTransactionsByFolioAndInstitutionName(Integer folioNumber, String institutionName);
+	List<FDTransaction> getTransactionsByFolioAndName(Integer folioNumber, String name);
 
 	Transaction saveTransaction(Transaction txnRequest);
 
-	List<TransactionDto> calculateAverageByYear(List<PPFTransactions> transactions);
-
 	List<PPFTransactions> convertTransactionToPPFTransactions(List<Transaction> txnList);
+
+	List<TransactionDto> getDetailedFDTransactions(FDTransaction txn);
 
 }

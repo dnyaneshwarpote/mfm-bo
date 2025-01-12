@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.org.mfm.entity.Investment;
-import com.org.mfm.entity.PPF;
-import com.org.mfm.entity.PPFTransaction;
 import com.org.mfm.entity.PortFolio;
+import com.org.mfm.entity.Stock;
+import com.org.mfm.entity.StockTransaction;
 import com.org.mfm.entity.Transaction;
 import com.org.mfm.enums.InvestmentType;
 import com.org.mfm.repository.StockTransactionRepository;
@@ -41,17 +41,17 @@ public class StockTransactionServiceImpl implements StockTransactionService {
 
 	@Override
 	public Transaction saveTransaction(Transaction txnRequest) {
-		PPFTransaction ppfTxn = (PPFTransaction) txnRequest;
+		StockTransaction stockTxn = (StockTransaction) txnRequest;
 		PortFolio port = this.portfolioService.getPortFolio(txnRequest.getFolioNumber());
 		Optional<Investment> investment = port.getInvestments().stream()
 				.filter(inv -> InvestmentType.STOCK.equals(inv.getInvestmentType())
-						&& (((PPF) inv).getInstitutionName().equals(ppfTxn.getInstitutionName())))
+						&& (((Stock) inv).getStockName().equals(stockTxn.getStockName())))
 				.findFirst();
 
 		if (investment.isPresent()) {
-			return this.investmentService.updateInvestment(ppfTxn, investment.get());
+			return this.investmentService.updateInvestment(stockTxn, investment.get());
 		} else {
-			return this.investmentService.addInvestment(ppfTxn, port);
+			return this.investmentService.addInvestment(stockTxn, port);
 		}
 	}
 }

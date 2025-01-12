@@ -57,7 +57,7 @@ public class PPFServiceImpl implements PPFService {
 		ppf.setCurrentValue(txnAmount);
 		ppf.setInvestmentType(InvestmentType.PPF);
 		ppf.setNetProfit(0);
-		ppf.setInstitutionName(stockTxn.getInstitutionName());
+		ppf.setName(stockTxn.getName());
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(stockTxn);
 		ppf.setTransactions(transactions);
@@ -77,7 +77,7 @@ public class PPFServiceImpl implements PPFService {
 		stockInvestment.setInvestmentValue(txnAmount);
 		stockInvestment.setCurrentValue(txnAmount);
 		stockInvestment.setInvestmentType(InvestmentType.STOCK);
-		stockInvestment.setInstitutionName(stockTxn.getInstitutionName());
+		stockInvestment.setName(stockTxn.getName());
 		List<Transaction> transactions = List.of(stockTxn);
 		stockInvestment.setTransactions(transactions);
 		stockTxn.setInvestment(stockInvestment);
@@ -154,8 +154,7 @@ public class PPFServiceImpl implements PPFService {
 				.filter(inv -> InvestmentType.STOCK.equals(inv.getInvestmentType())).toList();
 
 		PPF stockInvestment = (PPF) investments.stream()
-				.filter(inv -> ((PPF) inv).getInstitutionName().equals(txnRequest.getInstitutionName())).findFirst()
-				.get();
+				.filter(inv -> ((PPF) inv).getName().equals(txnRequest.getName())).findFirst().get();
 
 		PPFTransaction stockTxn = (PPFTransaction) stockInvestment.getTransactions().stream()
 				.filter(inv -> inv.getTxnId() == txnRequest.getTxnId()).findFirst().get();

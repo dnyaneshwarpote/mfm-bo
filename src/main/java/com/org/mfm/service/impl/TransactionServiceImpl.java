@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.org.mfm.bean.PPFTransactions;
 import com.org.mfm.dto.TransactionDto;
 import com.org.mfm.dto.mapper.TransactionDtoMapper;
+import com.org.mfm.entity.FDTransaction;
 import com.org.mfm.entity.PPF;
 import com.org.mfm.entity.PPFTransaction;
 import com.org.mfm.entity.Transaction;
@@ -83,14 +84,21 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<TransactionDto> getTransactions(InvestmentType invType, int folioNumber,
-			TransactionDtoMapper txnDtoMapper) {
-		List<Transaction> txnList = findAllTxnsByInvestmentTypeAndFolioNumber(invType, folioNumber);
-		if (invType.equals(InvestmentType.PPF)) {
+	public List<TransactionDto> getTransactions(TransactionDtoMapper txnMapper, InvestmentType invType, int folioNumber,
+			String name) {
+		List<TransactionDto> responseList = null;
+
+		if (invType.equals(InvestmentType.FD)) {
+			List<FDTransaction> txnList2 = this.fdTxnService.getTransactionsByFolioAndName(folioNumber, name);
+			FDTransaction fdTxn2 = txnList2.get(0);
+			responseList = this.fdTxnService.getDetailedFDTransactions(fdTxn2);
+		} else if (invType.equals(InvestmentType.PPF)) {
+			List<Transaction> txnList = findAllTxnsByInvestmentTypeAndFolioNumber(invType, folioNumber);
 			List<PPFTransactions> list = this.ppfTxnService.convertTransactionToPPFTransactions(txnList);
-			return getTransformedTransaction(list);
+			responseList = getTransformedTransaction(list);
 		}
-		return txnList.stream().map(txnDtoMapper::toDto).toList();
+
+		return responseList;
 	}
 
 }

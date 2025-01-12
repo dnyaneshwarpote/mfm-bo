@@ -22,6 +22,6 @@ public interface TransactionService {
 
 	List<TransactionDto> getTransformedTransaction(List<PPFTransactions> list);
 
-	List<TransactionDto> getTransactions(InvestmentType investmentType, int folioNumber, TransactionDtoMapper txnDtoMapper);
+	List<TransactionDto> getTransactions(TransactionDtoMapper txnDtoMapper, InvestmentType investmentType, int folioNumber, String name);
 
 }

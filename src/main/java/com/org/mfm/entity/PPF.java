@@ -14,7 +14,7 @@ public class PPF extends Investment {
 
 	@Id
 	private int id;
-	private String institutionName;
+	private String name;
 	private float interestRate;
 	private int investmentYear;
 

@@ -10,6 +10,6 @@ import lombok.Setter;
 public class PPFTransaction extends Transaction {
 
 	private double balanceAmount;
-	private String institutionName;
+	private String name;
 	private float rateOfInt;
 }

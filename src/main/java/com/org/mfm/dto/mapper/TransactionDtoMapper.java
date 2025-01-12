@@ -14,20 +14,20 @@ import com.org.mfm.enums.InvestmentType;
 public class TransactionDtoMapper {
 
 	public TransactionDto toDto(Transaction txn) {
-		//To-do refactor builder setter resusable
+		// To-do refactor builder setter reusable
 		TransactionDtoBuilder builder = TransactionDto.builder();
 		builder.txnId(txn.getTxnId()).txnDate(txn.getTxnDate()).txnAmount(txn.getTxnAmount())
 				.invType(txn.getInvestmentType()).txnType(txn.getTxnType());
 		if (txn.getInvestmentType().equals(InvestmentType.PPF)) {
 			PPFTransaction savedTxn = (PPFTransaction) txn;
-			return builder.institutionName(savedTxn.getInstitutionName()).rateOfInt(savedTxn.getRateOfInt()).build();
+			return builder.name(savedTxn.getName()).rateOfInt(savedTxn.getRateOfInt()).build();
 		} else if (txn.getInvestmentType().equals(InvestmentType.STOCK)) {
 			StockTransaction savedTxn = (StockTransaction) txn;
 			return builder.stockName(savedTxn.getStockName()).quantity(savedTxn.getQuantity()).rate(savedTxn.getRate())
 					.brokerage(savedTxn.getBrokerage()).build();
 		} else if (txn.getInvestmentType().equals(InvestmentType.FD)) {
 			FDTransaction savedTxn = (FDTransaction) txn;
-			return builder.institutionName(savedTxn.getInstitutionName()).rateOfInt(savedTxn.getRateOfInt())
+			return builder.name(savedTxn.getName()).rateOfInt(savedTxn.getRateOfInt())
 					.maturityDate(savedTxn.getMaturityDate()).build();
 		}
 		return builder.build();
@@ -44,21 +44,22 @@ public class TransactionDtoMapper {
 			ppfTxn.setTxnAmount(txnDto.txnAmount());
 			ppfTxn.setInvestmentType(txnDto.invType());
 			ppfTxn.setTxnType(txnDto.txnType());
-			ppfTxn.setInstitutionName(txnDto.institutionName());
+			ppfTxn.setName(txnDto.name());
 			ppfTxn.setRateOfInt(txnDto.rateOfInt());
 			return ppfTxn;
 		} else if (txnDto.invType().equals(InvestmentType.FD)) {
 
 			FDTransaction ppfTxn = new FDTransaction();
+			ppfTxn.setName(txnDto.name());
 			ppfTxn.setFolioNumber(txnDto.folioNumber());
 			ppfTxn.setTxnId(txnDto.txnId());
 			ppfTxn.setTxnDate(txnDto.txnDate());
 			ppfTxn.setTxnAmount(txnDto.txnAmount());
 			ppfTxn.setInvestmentType(txnDto.invType());
 			ppfTxn.setTxnType(txnDto.txnType());
-			ppfTxn.setInstitutionName(txnDto.institutionName());
 			ppfTxn.setRateOfInt(txnDto.rateOfInt());
 			ppfTxn.setMaturityDate(txnDto.maturityDate());
+
 			return ppfTxn;
 		} else if (txnDto.invType().equals(InvestmentType.STOCK)) {
 			StockTransaction stockTxn = new StockTransaction();

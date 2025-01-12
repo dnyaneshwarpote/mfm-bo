@@ -58,7 +58,7 @@ public class FDServiceImpl implements FDService {
 		ppf.setCurrentValue(txnAmount);
 		ppf.setInvestmentType(InvestmentType.FD);
 		ppf.setNetProfit(0);
-		ppf.setInstitutionName(stockTxn.getInstitutionName());
+		ppf.setName(stockTxn.getName());
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(stockTxn);
 		ppf.setTransactions(transactions);
@@ -78,7 +78,7 @@ public class FDServiceImpl implements FDService {
 		stockInvestment.setInvestmentValue(txnAmount);
 		stockInvestment.setCurrentValue(txnAmount);
 		stockInvestment.setInvestmentType(InvestmentType.STOCK);
-		stockInvestment.setInstitutionName(stockTxn.getInstitutionName());
+		stockInvestment.setName(stockTxn.getName());
 		List<Transaction> transactions = List.of(stockTxn);
 		stockInvestment.setTransactions(transactions);
 		stockTxn.setInvestment(stockInvestment);
@@ -154,9 +154,8 @@ public class FDServiceImpl implements FDService {
 		List<Investment> investments = port.getInvestments().stream()
 				.filter(inv -> InvestmentType.STOCK.equals(inv.getInvestmentType())).toList();
 
-		FD stockInvestment = (FD) investments.stream()
-				.filter(inv -> ((FD) inv).getInstitutionName().equals(txnRequest.getInstitutionName())).findFirst()
-				.get();
+		FD stockInvestment = (FD) investments.stream().filter(inv -> ((FD) inv).getName().equals(txnRequest.getName()))
+				.findFirst().get();
 
 		PPFTransaction stockTxn = (PPFTransaction) stockInvestment.getTransactions().stream()
 				.filter(inv -> inv.getTxnId() == txnRequest.getTxnId()).findFirst().get();
