@@ -10,6 +10,6 @@ import com.org.mfm.entity.Transaction;
 public interface PPFTransactionRepository extends JpaRepository<PPFTransaction, Integer> {
 	List<Transaction> findAllByFolioNumber(Integer folioNumber);
 
-	List<PPFTransaction> findAllByFolioNumberAndInstitutionName(Integer folioNumber, String institutionName);
+	List<PPFTransaction> findAllByFolioNumberAndName(Integer folioNumber, String name);
 
 }

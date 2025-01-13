@@ -49,8 +49,8 @@ public class PPFTransactionServiceImpl implements PPFTransactionService {
 	}
 
 	@Override
-	public List<PPFTransaction> getTransactionsByFolioAndStockName(Integer folioNumber, String institutionName) {
-		return this.ppfTxnRepo.findAllByFolioNumberAndInstitutionName(folioNumber, institutionName);
+	public List<PPFTransaction> getTransactionsByFolioAndStockName(Integer folioNumber, String name) {
+		return this.ppfTxnRepo.findAllByFolioNumberAndName(folioNumber, name);
 	}
 
 	@Override
