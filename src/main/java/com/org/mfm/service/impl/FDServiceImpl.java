@@ -50,43 +50,26 @@ public class FDServiceImpl implements FDService {
 
 	@Override
 	public FDTransaction addInvestment(Transaction txn, PortFolio port) {
-		FDTransaction stockTxn = (FDTransaction) txn;
-		double txnAmount = stockTxn.getTxnAmount();
+		FDTransaction fdTxn = (FDTransaction) txn;
+		double txnAmount = fdTxn.getTxnAmount();
 		FD ppf = new FD();
 
 		ppf.setInvestmentValue(txnAmount);
 		ppf.setCurrentValue(txnAmount);
 		ppf.setInvestmentType(InvestmentType.FD);
-		ppf.setNetProfit(0);
-		ppf.setName(stockTxn.getName());
+		ppf.setInterestRate(fdTxn.getRateOfInt());
+		ppf.setName(fdTxn.getName());
 		List<Transaction> transactions = new ArrayList<>();
-		transactions.add(stockTxn);
+		transactions.add(fdTxn);
 		ppf.setTransactions(transactions);
-		stockTxn.setInvestment(ppf);
+		fdTxn.setInvestment(ppf);
 		List<Investment> invLst = new ArrayList<>();
 		invLst.add(ppf);
 		port.setInvestments(invLst);
 		ppf.setPorfolio(port);
 		portRepository.save(port);
-		return stockTxn;
+		return fdTxn;
 
-	}
-
-	public void addPPFInvestment(PPFTransaction stockTxn, PortFolio port) {
-		FD stockInvestment = new FD();
-		double txnAmount = stockTxn.getTxnAmount();
-		stockInvestment.setInvestmentValue(txnAmount);
-		stockInvestment.setCurrentValue(txnAmount);
-		stockInvestment.setInvestmentType(InvestmentType.STOCK);
-		stockInvestment.setName(stockTxn.getName());
-		List<Transaction> transactions = List.of(stockTxn);
-		stockInvestment.setTransactions(transactions);
-		stockTxn.setInvestment(stockInvestment);
-		List<Investment> invLst = new ArrayList<>();
-		invLst.add(stockInvestment);
-		port.setInvestments(invLst);
-		stockInvestment.setPorfolio(port);
-		portRepository.save(port);
 	}
 
 	public void calculateInterest(double annualDeposit, int startYear, int endYear) {
